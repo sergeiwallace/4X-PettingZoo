@@ -51,7 +51,7 @@ if __name__ == "__main__":
         max_action = [env.action_space(agent).high for agent in env.agents]
         min_action = [env.action_space(agent).low for agent in env.agents]
 
-    # Append number of agents and unit IDs to the initial hyperparameter dictionary
+    # Append number of agents and agent IDs to the initial hyperparameter dictionary
     n_agents = env.num_agents
     agent_ids = env.agents
 
@@ -73,29 +73,45 @@ if __name__ == "__main__":
     matd3.loadCheckpoint(path)
 
     # Define test loop parameters
-    episodes = 10  # Number of episodes to test unit on
+    episodes = 10  # Number of episodes to test agent on
     max_steps = 25  # Max number of steps to take in the environment in each episode
 
     rewards = []  # List to collect total episodic reward
     frames = []  # List to collect frames
     indi_agent_rewards = {
         agent_id: [] for agent_id in agent_ids
-    }  # Dictionary to collect inidivdual unit rewards
+    }  # Dictionary to collect inidivdual agent rewards
 
     rewards = []  # List to collect total episodic reward
     frames = []  # List to collect frames
     indi_agent_rewards = {
         agent_id: [] for agent_id in agent_ids
-    }  # Dictionary to collect inidivdual unit rewards
+    }  # Dictionary to collect inidivdual agent rewards
 
     # Test loop for inference
     for ep in range(episodes):
-        state, _ = env.reset()
+        state, info = env.reset()
         agent_reward = {agent_id: 0 for agent_id in agent_ids}
         score = 0
         for _ in range(max_steps):
-            # Get action
-            action = matd3.getAction(state, epsilon=0)
+            agent_mask = info["agent_mask"] if "agent_mask" in info.keys() else None
+            env_defined_actions = (
+                info["env_defined_actions"]
+                if "env_defined_actions" in info.keys()
+                else None
+            )
+
+            # Get next action from agent
+            cont_actions, discrete_action = matd3.getAction(
+                state,
+                epsilon=0,
+                agent_mask=agent_mask,
+                env_defined_actions=env_defined_actions,
+            )
+            if matd3.discrete_actions:
+                action = discrete_action
+            else:
+                action = cont_actions
 
             # Save the frame for this step and append to frames list
             frame = env.render()
@@ -104,19 +120,20 @@ if __name__ == "__main__":
             # Take action in environment
             state, reward, termination, truncation, info = env.step(action)
 
-            # Stop episode if any agents have terminated
-            if any(truncation.values()) or any(termination.values()):
-                break
-
-            # Save unit's reward for this step in this episode
+            # Save agent's reward for this step in this episode
             for agent_id, r in reward.items():
                 agent_reward[agent_id] += r
 
             # Determine total score for the episode and then append to rewards list
             score = sum(agent_reward.values())
+
+            # Stop episode if any agents have terminated
+            if any(truncation.values()) or any(termination.values()):
+                break
+
         rewards.append(score)
 
-        # Record unit specific episodic reward
+        # Record agent specific episodic reward
         for agent_id in agent_ids:
             indi_agent_rewards[agent_id].append(agent_reward[agent_id])
 

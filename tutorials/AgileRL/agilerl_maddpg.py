@@ -1,4 +1,4 @@
-"""This tutorial shows how to train an MADDPG unit on the space invaders atari environment.
+"""This tutorial shows how to train an MADDPG agent on the space invaders atari environment.
 
 Authors: Michael (https://github.com/mikepratt1), Nick (https://github.com/nicku-a)
 """
@@ -17,7 +17,7 @@ from pettingzoo.atari import space_invaders_v2
 
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print("===== AgileRL Online Multi-Agent Demo =====")
+    print("===== AgileRL MADDPG Demo =====")
 
     # Define the network configuration
     NET_CONFIG = {
@@ -54,7 +54,7 @@ if __name__ == "__main__":
         env = ss.frame_stack_v1(env, 4)
     env.reset()
 
-    # Configure the multi-unit algo input arguments
+    # Configure the multi-agent algo input arguments
     try:
         state_dim = [env.observation_space(agent).n for agent in env.agents]
         one_hot = True
@@ -78,7 +78,7 @@ if __name__ == "__main__":
             (state_dim[2], state_dim[0], state_dim[1]) for state_dim in state_dim
         ]
 
-    # Append number of agents and unit IDs to the initial hyperparameter dictionary
+    # Append number of agents and agent IDs to the initial hyperparameter dictionary
     INIT_HP["N_AGENTS"] = env.num_agents
     INIT_HP["AGENT_IDS"] = env.agents
 
@@ -94,7 +94,7 @@ if __name__ == "__main__":
         device=device,
     )
 
-    # Configure the multi-unit replay buffer
+    # Configure the multi-agent replay buffer
     field_names = ["state", "action", "reward", "next_state", "done"]
     memory = MultiAgentReplayBuffer(
         INIT_HP["MEMORY_SIZE"],
@@ -147,21 +147,36 @@ if __name__ == "__main__":
     eps_decay = 0.995  # Epsilon decay
     evo_epochs = 20  # Evolution frequency
     evo_loop = 1  # Number of evaluation episodes
-    elite = pop[0]  # Assign a placeholder "elite" unit
+    elite = pop[0]  # Assign a placeholder "elite" agent
 
     # Training loop
     for idx_epi in trange(max_episodes):
         for agent in pop:  # Loop through population
-            state = env.reset()[0]  # Reset environment at start of episode
+            state, info = env.reset()  # Reset environment at start of episode
             agent_reward = {agent_id: 0 for agent_id in env.agents}
             if INIT_HP["CHANNELS_LAST"]:
                 state = {
-                    agent_id: np.moveaxis(np.expand_dims(s, 0), [3], [1])
+                    agent_id: np.moveaxis(np.expand_dims(s, 0), [-1], [-3])
                     for agent_id, s in state.items()
                 }
             for _ in range(max_steps):
-                action = agent.getAction(state, epsilon)  # Get next action from unit
-                next_state, reward, termination, truncation, _ = env.step(
+                agent_mask = info["agent_mask"] if "agent_mask" in info.keys() else None
+                env_defined_actions = (
+                    info["env_defined_actions"]
+                    if "env_defined_actions" in info.keys()
+                    else None
+                )
+
+                # Get next action from agent
+                cont_actions, discrete_action = agent.getAction(
+                    state, epsilon, agent_mask, env_defined_actions
+                )
+                if agent.discrete_actions:
+                    action = discrete_action
+                else:
+                    action = cont_actions
+
+                next_state, reward, termination, truncation, info = env.step(
                     action
                 )  # Act in environment
 
@@ -169,16 +184,12 @@ if __name__ == "__main__":
                 if INIT_HP["CHANNELS_LAST"]:
                     state = {agent_id: np.squeeze(s) for agent_id, s in state.items()}
                     next_state = {
-                        agent_id: np.moveaxis(ns, [2], [0])
+                        agent_id: np.moveaxis(ns, [-1], [-3])
                         for agent_id, ns in next_state.items()
                     }
 
-                # Stop episode if any agents have terminated
-                if any(truncation.values()) or any(termination.values()):
-                    break
-
-                # Save experiences to replay buffe
-                memory.save2memory(state, action, reward, next_state, termination)
+                # Save experiences to replay buffer
+                memory.save2memory(state, cont_actions, reward, next_state, termination)
 
                 # Collect the reward
                 for agent_id, r in reward.items():
@@ -191,7 +202,7 @@ if __name__ == "__main__":
                     experiences = memory.sample(
                         agent.batch_size
                     )  # Sample replay buffer
-                    agent.learn(experiences)  # Learn according to unit's RL algorithm
+                    agent.learn(experiences)  # Learn according to agent's RL algorithm
 
                 # Update the state
                 if INIT_HP["CHANNELS_LAST"]:
@@ -200,6 +211,10 @@ if __name__ == "__main__":
                         for agent_id, ns in next_state.items()
                     }
                 state = next_state
+
+                # Stop episode if any agents have terminated
+                if any(truncation.values()) or any(termination.values()):
+                    break
 
             # Save the total episode reward
             score = sum(agent_reward.values())
