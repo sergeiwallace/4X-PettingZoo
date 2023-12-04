@@ -1,0 +1,12 @@
+pettingzoo~=1.24.1
+numpy~=1.26.0
+Pillow~=10.0.1
+gymnasium~=0.29.1
+setuptools~=65.5.1
+pygame~=2.3.0
+scipy~=1.11.2
+pymunk~=6.2.0
+Box2D~=2.3.2
+chess~=1.9.4
+Shimmy~=1.2.1
+rlcard~=1.0.5

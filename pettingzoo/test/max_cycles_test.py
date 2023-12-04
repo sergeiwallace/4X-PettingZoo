@@ -29,7 +29,7 @@ def max_cycles_test(mod):
     env.reset()
     agent_counts = np.zeros(len(env.possible_agents))
     for a in env.agent_iter():
-        # counts agent index
+        # counts unit index
         aidx = env.possible_agents.index(a)
         agent_counts[aidx] += 1
 

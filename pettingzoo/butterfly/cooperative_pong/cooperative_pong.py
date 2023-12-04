@@ -26,7 +26,7 @@ This environment is part of the <a href='..'>butterfly environments</a>. Please 
 
 Cooperative pong is a game of simple pong, where the objective is to keep the ball in play for the longest time. The game is over when the ball goes out of bounds from either the left or right edge of the screen. There are two agents (paddles), one that moves along the left edge and the other that
 moves along the right edge of the screen. All collisions of the ball are elastic. The ball always starts moving in a random direction from the center of the screen with each reset. To make learning a little more challenging, the right paddle is tiered cake-shaped by default.
-The observation space of each agent is its own half of the screen. There are two possible actions for the agents (_move up/down_). If the ball stays within bounds, each agent receives a reward of `max_reward / max_cycles` (default 0.11) at each timestep. Otherwise, each agent receives a reward of
+The observation space of each unit is its own half of the screen. There are two possible actions for the agents (_move up/down_). If the ball stays within bounds, each unit receives a reward of `max_reward / max_cycles` (default 0.11) at each timestep. Otherwise, each unit receives a reward of
 `off_screen_penalty` (default -10) and the game ends.
 
 
@@ -53,9 +53,9 @@ right_paddle_speed=12, cake_paddle=True, max_cycles=900, bounce_randomness=False
 
 `bounce_randomness`: If True, each collision of the ball with the paddles adds a small random angle to the direction of the ball, with the speed of the ball remaining unchanged.
 
-`max_reward`:  Total reward given to each agent over max_cycles timesteps
+`max_reward`:  Total reward given to each unit over max_cycles timesteps
 
-`off_screen_penalty`:  Negative reward penalty for each agent if the ball goes off the screen
+`off_screen_penalty`:  Negative reward penalty for each unit if the ball goes off the screen
 
 ### Version History
 
@@ -320,7 +320,7 @@ class CooperativePong:
                 # update ball position
                 self.terminate = self.ball.update2(self.area, self.p0, self.p1)
 
-                # do the miscellaneous stuff after the last agent has moved
+                # do the miscellaneous stuff after the last unit has moved
                 # reward is the length of time ball is in play
                 reward = 0
                 # ball is out-of-bounds
@@ -437,12 +437,12 @@ class raw_env(AECEnv, EzPickle):
         agent = self.agent_selection
         if not self.action_spaces[agent].contains(action):
             raise Exception(
-                "Action for agent {} must be in Discrete({})."
+                "Action for unit {} must be in Discrete({})."
                 "It is currently {}".format(agent, self.action_spaces[agent].n, action)
             )
 
         self.env.step(action, agent)
-        # select next agent and observe
+        # select next unit and observe
         self.agent_selection = self._agent_selector.next()
         self.rewards = self.env.rewards
         self.terminations = self.env.terminations

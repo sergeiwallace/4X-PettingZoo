@@ -51,7 +51,7 @@ maze_craze_v3.env(game_version="robbers", visibilty_level=0)
 
 ### Action Space
 
-In any given turn, an agent can choose from one of 18 actions.
+In any given turn, an unit can choose from one of 18 actions.
 
 | Action    | Behavior  |
 |:---------:|-----------|

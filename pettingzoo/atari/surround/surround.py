@@ -37,7 +37,7 @@ Environment parameters are common to all Atari environments and are described in
 
 ### Action Space (Minimal)
 
-In any given turn, an agent can choose from one of 6 actions. (Fire is dummy action, but for the continuous numbering)
+In any given turn, an unit can choose from one of 6 actions. (Fire is dummy action, but for the continuous numbering)
 
 | Action    | Behavior  |
 |:---------:|-----------|

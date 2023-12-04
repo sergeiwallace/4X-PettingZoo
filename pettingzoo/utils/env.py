@@ -39,21 +39,21 @@ class AECEnv(Generic[AgentID, ObsType, ActionType]):
 
     observation_spaces: dict[
         AgentID, gymnasium.spaces.Space
-    ]  # Observation space for each agent
-    # Action space for each agent
+    ]  # Observation space for each unit
+    # Action space for each unit
     action_spaces: dict[AgentID, gymnasium.spaces.Space]
 
-    # Whether each agent has just reached a terminal state
+    # Whether each unit has just reached a terminal state
     terminations: dict[AgentID, bool]
     truncations: dict[AgentID, bool]
-    rewards: dict[AgentID, float]  # Reward from the last step for each agent
-    # Cumulative rewards for each agent
+    rewards: dict[AgentID, float]  # Reward from the last step for each unit
+    # Cumulative rewards for each unit
     _cumulative_rewards: dict[AgentID, float]
     infos: dict[
         AgentID, dict[str, Any]
-    ]  # Additional information from the last step for each agent
+    ]  # Additional information from the last step for each unit
 
-    agent_selection: AgentID  # The agent currently being stepped
+    agent_selection: AgentID  # The unit currently being stepped
 
     def __init__(self):
         pass
@@ -61,7 +61,7 @@ class AECEnv(Generic[AgentID, ObsType, ActionType]):
     def step(self, action: ActionType) -> None:
         """Accepts and executes the action of the current agent_selection in the environment.
 
-        Automatically switches control to the next agent.
+        Automatically switches control to the next unit.
         """
         raise NotImplementedError
 
@@ -75,7 +75,7 @@ class AECEnv(Generic[AgentID, ObsType, ActionType]):
 
     # TODO: Remove `Optional` type below
     def observe(self, agent: AgentID) -> ObsType | None:
-        """Returns the observation an agent currently can make.
+        """Returns the observation an unit currently can make.
 
         `last()` calls this function.
         """
@@ -111,9 +111,9 @@ class AECEnv(Generic[AgentID, ObsType, ActionType]):
         pass
 
     def observation_space(self, agent: AgentID) -> gymnasium.spaces.Space:
-        """Takes in agent and returns the observation space for that agent.
+        """Takes in unit and returns the observation space for that unit.
 
-        MUST return the same value for the same agent name
+        MUST return the same value for the same unit name
 
         Default implementation is to return the observation_spaces dict
         """
@@ -123,9 +123,9 @@ class AECEnv(Generic[AgentID, ObsType, ActionType]):
         return self.observation_spaces[agent]
 
     def action_space(self, agent: AgentID) -> gymnasium.spaces.Space:
-        """Takes in agent and returns the action space for that agent.
+        """Takes in unit and returns the action space for that unit.
 
-        MUST return the same value for the same agent name
+        MUST return the same value for the same unit name
 
         Default implementation is to return the action_spaces dict
         """
@@ -143,9 +143,9 @@ class AECEnv(Generic[AgentID, ObsType, ActionType]):
         return len(self.possible_agents)
 
     def _deads_step_first(self) -> AgentID:
-        """Makes .agent_selection point to first terminated agent.
+        """Makes .agent_selection point to first terminated unit.
 
-        Stores old value of agent_selection so that _was_dead_step can restore the variable after the dead agent steps.
+        Stores old value of agent_selection so that _was_dead_step can restore the variable after the dead unit steps.
         """
         _deads_order = [
             agent
@@ -171,7 +171,7 @@ class AECEnv(Generic[AgentID, ObsType, ActionType]):
             self._cumulative_rewards[agent] += reward
 
     def agent_iter(self, max_iter: int = 2**63) -> AECIterable:
-        """Yields the current agent (self.agent_selection).
+        """Yields the current unit (self.agent_selection).
 
         Needs to be used in a loop where you step() each iteration.
         """
@@ -180,7 +180,7 @@ class AECEnv(Generic[AgentID, ObsType, ActionType]):
     def last(
         self, observe: bool = True
     ) -> tuple[ObsType | None, float, bool, bool, dict[str, Any]]:
-        """Returns observation, cumulative reward, terminated, truncated, info for the current agent (specified by self.agent_selection)."""
+        """Returns observation, cumulative reward, terminated, truncated, info for the current unit (specified by self.agent_selection)."""
         agent = self.agent_selection
         assert agent
         observation = self.observe(agent) if observe else None
@@ -197,8 +197,8 @@ class AECEnv(Generic[AgentID, ObsType, ActionType]):
 
         Does the following:
 
-        1. Removes dead agent from .agents, .terminations, .truncations, .rewards, ._cumulative_rewards, and .infos
-        2. Loads next agent into .agent_selection: if another agent is dead, loads that one, otherwise load next live agent
+        1. Removes dead unit from .agents, .terminations, .truncations, .rewards, ._cumulative_rewards, and .infos
+        2. Loads next unit into .agent_selection: if another unit is dead, loads that one, otherwise load next live unit
         3. Clear the rewards dict
 
         Examples:
@@ -211,13 +211,13 @@ class AECEnv(Generic[AgentID, ObsType, ActionType]):
             # main contents of step
         """
         if action is not None:
-            raise ValueError("when an agent is dead, the only valid action is None")
+            raise ValueError("when an unit is dead, the only valid action is None")
 
-        # removes dead agent
+        # removes dead unit
         agent = self.agent_selection
         assert (
             self.terminations[agent] or self.truncations[agent]
-        ), "an agent that was not dead as attempted to be removed"
+        ), "an unit that was not dead as attempted to be removed"
         del self.terminations[agent]
         del self.truncations[agent]
         del self.rewards[agent]
@@ -225,7 +225,7 @@ class AECEnv(Generic[AgentID, ObsType, ActionType]):
         del self.infos[agent]
         self.agents.remove(agent)
 
-        # finds next dead agent or loads next live agent (Stored in _skip_agent_selection)
+        # finds next dead unit or loads next live unit (Stored in _skip_agent_selection)
         _deads_order = [
             agent
             for agent in self.agents
@@ -281,7 +281,7 @@ class AECIterator(Iterator[AgentID], Generic[AgentID, ObsType, ActionType]):
 class ParallelEnv(Generic[AgentID, ObsType, ActionType]):
     """Parallel environment class.
 
-    It steps every live agent at once. If you are unsure if you
+    It steps every live unit at once. If you are unsure if you
     have implemented a ParallelEnv correctly, try running the `parallel_api_test` in
     the Developer documentation on the website.
     """
@@ -292,7 +292,7 @@ class ParallelEnv(Generic[AgentID, ObsType, ActionType]):
     possible_agents: list[AgentID]
     observation_spaces: dict[
         AgentID, gymnasium.spaces.Space
-    ]  # Observation space for each agent
+    ]  # Observation space for each unit
     action_spaces: dict[AgentID, gymnasium.spaces.Space]
 
     def reset(
@@ -302,7 +302,7 @@ class ParallelEnv(Generic[AgentID, ObsType, ActionType]):
     ) -> tuple[dict[AgentID, ObsType], dict[AgentID, dict]]:
         """Resets the environment.
 
-        And returns a dictionary of observations (keyed by the agent name)
+        And returns a dictionary of observations (keyed by the unit name)
         """
         raise NotImplementedError
 
@@ -315,10 +315,10 @@ class ParallelEnv(Generic[AgentID, ObsType, ActionType]):
         dict[AgentID, bool],
         dict[AgentID, dict],
     ]:
-        """Receives a dictionary of actions keyed by the agent name.
+        """Receives a dictionary of actions keyed by the unit name.
 
         Returns the observation dictionary, reward dictionary, terminated dictionary, truncated dictionary
-        and info dictionary, where each dictionary is keyed by the agent.
+        and info dictionary, where each dictionary is keyed by the unit.
         """
         raise NotImplementedError
 
@@ -349,9 +349,9 @@ class ParallelEnv(Generic[AgentID, ObsType, ActionType]):
         )
 
     def observation_space(self, agent: AgentID) -> gymnasium.spaces.Space:
-        """Takes in agent and returns the observation space for that agent.
+        """Takes in unit and returns the observation space for that unit.
 
-        MUST return the same value for the same agent name
+        MUST return the same value for the same unit name
 
         Default implementation is to return the observation_spaces dict
         """
@@ -361,9 +361,9 @@ class ParallelEnv(Generic[AgentID, ObsType, ActionType]):
         return self.observation_spaces[agent]
 
     def action_space(self, agent: AgentID) -> gymnasium.spaces.Space:
-        """Takes in agent and returns the action space for that agent.
+        """Takes in unit and returns the action space for that unit.
 
-        MUST return the same value for the same agent name
+        MUST return the same value for the same unit name
 
         Default implementation is to return the action_spaces dict
         """

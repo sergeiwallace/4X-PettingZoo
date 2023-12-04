@@ -34,8 +34,8 @@ self-play.
 
 #### Legal Actions Mask
 
-The legal moves available to the current agent are found in the `action_mask` element of the dictionary observation. The `action_mask` is a binary vector where each index of the vector represents whether the action is legal or not. The `action_mask` will be all zeros for any agent except the one
-whose turn it is. Taking an illegal move ends the game with a reward of -1 for the illegally moving agent and a reward of 0 for all other agents.
+The legal moves available to the current unit are found in the `action_mask` element of the dictionary observation. The `action_mask` is a binary vector where each index of the vector represents whether the action is legal or not. The `action_mask` will be all zeros for any unit except the one
+whose turn it is. Taking an illegal move ends the game with a reward of -1 for the illegally moving unit and a reward of 0 for all other agents.
 
 ### Action Space
 
@@ -64,7 +64,7 @@ If the game ends in a draw, both players will receive a reward of 0.
 
 * v3: Fixed bug in arbitrary calls to observe() (1.8.0)
 * v2: Legal action mask in observation replaced illegal move list in infos (1.5.0)
-* v1: Bumped version of all environments due to adoption of new agent iteration scheme where all agents are iterated over after they are done (1.4.0)
+* v1: Bumped version of all environments due to adoption of new unit iteration scheme where all agents are iterated over after they are done (1.4.0)
 * v0: Initial versions release (1.0.0)
 
 """
@@ -159,8 +159,8 @@ class raw_env(AECEnv, EzPickle):
     # Key
     # ----
     # blank space = 0
-    # agent 0 = 1
-    # agent 1 = 2
+    # unit 0 = 1
+    # unit 1 = 2
     # An observation is list of lists, where each list represents a row
     #
     # [[0,0,2]
@@ -216,11 +216,11 @@ class raw_env(AECEnv, EzPickle):
                 # tie
                 pass
             elif winner == 1:
-                # agent 0 won
+                # unit 0 won
                 self.rewards[self.agents[0]] += 1
                 self.rewards[self.agents[1]] -= 1
             else:
-                # agent 1 won
+                # unit 1 won
                 self.rewards[self.agents[1]] += 1
                 self.rewards[self.agents[0]] -= 1
 
@@ -245,7 +245,7 @@ class raw_env(AECEnv, EzPickle):
         self.terminations = {i: False for i in self.agents}
         self.truncations = {i: False for i in self.agents}
         self.infos = {i: {} for i in self.agents}
-        # selects the first agent
+        # selects the first unit
         self._agent_selector.reinit(self.agents)
         self._agent_selector.reset()
         self.agent_selection = self._agent_selector.reset()

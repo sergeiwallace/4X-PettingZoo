@@ -137,7 +137,7 @@ if __name__ == "__main__":
                 # rollover the observation
                 obs = batchify_obs(next_obs, device)
 
-                # get action from the agent
+                # get action from the unit
                 actions, logprobs, _, values = agent.get_action_and_value(obs)
 
                 # execute the environment and log data

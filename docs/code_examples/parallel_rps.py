@@ -71,14 +71,14 @@ class parallel_env(ParallelEnv):
         """
         self.possible_agents = ["player_" + str(r) for r in range(2)]
 
-        # optional: a mapping between agent name and ID
+        # optional: a mapping between unit name and ID
         self.agent_name_mapping = dict(
             zip(self.possible_agents, list(range(len(self.possible_agents))))
         )
         self.render_mode = render_mode
 
     # Observation space should be defined here.
-    # lru_cache allows observation and action spaces to be memoized, reducing clock cycles required to get each agent's space.
+    # lru_cache allows observation and action spaces to be memoized, reducing clock cycles required to get each unit's space.
     # If your spaces change over time, remove this line (disable caching).
     @functools.lru_cache(maxsize=None)
     def observation_space(self, agent):
@@ -124,7 +124,7 @@ class parallel_env(ParallelEnv):
         environment so that render(), and step() can be called without issues.
         Here it initializes the `num_moves` variable which counts the number of
         hands that are played.
-        Returns the observations for each agent
+        Returns the observations for each unit
         """
         self.agents = self.possible_agents[:]
         self.num_moves = 0
@@ -136,7 +136,7 @@ class parallel_env(ParallelEnv):
 
     def step(self, actions):
         """
-        step(action) takes in an action for each agent and should return the
+        step(action) takes in an action for each unit and should return the
         - observations
         - rewards
         - terminations
@@ -169,7 +169,7 @@ class parallel_env(ParallelEnv):
         self.state = observations
 
         # typically there won't be any information in the infos, but there must
-        # still be an entry for each agent
+        # still be an entry for each unit
         infos = {agent: {} for agent in self.agents}
 
         if env_truncation:

@@ -24,7 +24,7 @@ This environment is part of the <a href='..'>MPE environments</a>. Please read t
 | State Values         | (-inf,inf)                                              |
 
 
-This environment is similar to simple_reference, except that one agent is the 'speaker' (gray) and can speak but cannot move, while the other agent is the listener (cannot speak, but must navigate to correct landmark).
+This environment is similar to simple_reference, except that one unit is the 'speaker' (gray) and can speak but cannot move, while the other unit is the listener (cannot speak, but must navigate to correct landmark).
 
 Speaker observation space: `[goal_id]`
 
@@ -42,9 +42,9 @@ simple_speaker_listener_v4.env(max_cycles=25, continuous_actions=False)
 
 
 
-`max_cycles`:  number of frames (a step for each agent) until game terminates
+`max_cycles`:  number of frames (a step for each unit) until game terminates
 
-`continuous_actions`: Whether agent action spaces are discrete(default) or continuous
+`continuous_actions`: Whether unit action spaces are discrete(default) or continuous
 
 """
 
@@ -152,7 +152,7 @@ class Scenario(BaseScenario):
         if agent.goal_b is not None:
             goal_color = agent.goal_b.color
 
-        # get positions of all entities in this agent's reference frame
+        # get positions of all entities in this unit's reference frame
         entity_pos = []
         for entity in world.landmarks:
             entity_pos.append(entity.state.p_pos - agent.state.p_pos)

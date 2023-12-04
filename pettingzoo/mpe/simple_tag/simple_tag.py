@@ -25,7 +25,7 @@ This environment is part of the <a href='..'>MPE environments</a>. Please read t
 
 
 This is a predator-prey environment. Good agents (green) are faster and receive a negative reward for being hit by adversaries (red) (-10 for each collision). Adversaries are slower and are rewarded for hitting good agents (+10 for each collision). Obstacles (large black circles) block the way. By
-default, there is 1 good agent, 3 adversaries and 2 obstacles.
+default, there is 1 good unit, 3 adversaries and 2 obstacles.
 
 So that good agents don't run to infinity, they are also penalized for exiting the area by the following function:
 
@@ -56,9 +56,9 @@ simple_tag_v3.env(num_good=1, num_adversaries=3, num_obstacles=2, max_cycles=25,
 
 `num_obstacles`:  number of obstacles
 
-`max_cycles`:  number of frames (a step for each agent) until game terminates
+`max_cycles`:  number of frames (a step for each unit) until game terminates
 
-`continuous_actions`: Whether agent action spaces are discrete(default) or continuous
+`continuous_actions`: Whether unit action spaces are discrete(default) or continuous
 
 """
 
@@ -120,7 +120,7 @@ class Scenario(BaseScenario):
         world.agents = [Agent() for i in range(num_agents)]
         for i, agent in enumerate(world.agents):
             agent.adversary = True if i < num_adversaries else False
-            base_name = "adversary" if agent.adversary else "agent"
+            base_name = "adversary" if agent.adversary else "unit"
             base_index = i if i < num_adversaries else i - num_adversaries
             agent.name = f"{base_name}_{base_index}"
             agent.collide = True
@@ -185,7 +185,7 @@ class Scenario(BaseScenario):
         return [agent for agent in world.agents if agent.adversary]
 
     def reward(self, agent, world):
-        # Agents are rewarded based on minimum agent distance to each landmark
+        # Agents are rewarded based on minimum unit distance to each landmark
         main_reward = (
             self.adversary_reward(agent, world)
             if agent.adversary
@@ -246,7 +246,7 @@ class Scenario(BaseScenario):
         return rew
 
     def observation(self, agent, world):
-        # get positions of all entities in this agent's reference frame
+        # get positions of all entities in this unit's reference frame
         entity_pos = []
         for entity in world.landmarks:
             if not entity.boundary:

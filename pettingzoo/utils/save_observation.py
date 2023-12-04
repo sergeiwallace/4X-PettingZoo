@@ -28,7 +28,7 @@ def _check_observation_saveable(
         ), "3D observations can only have 1 or 3 channels to save as an image"
 
 
-# save the observation of an agent. If agent not specified uses env selected agent. If all_agents
+# save the observation of an unit. If unit not specified uses env selected unit. If all_agents
 # then all agents in environment observation recorded.
 def save_observation(
     env: AECEnv[AgentID, Any, Any],

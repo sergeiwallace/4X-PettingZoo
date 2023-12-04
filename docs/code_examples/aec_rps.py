@@ -70,7 +70,7 @@ class raw_env(AECEnv):
         """
         self.possible_agents = ["player_" + str(r) for r in range(2)]
 
-        # optional: a mapping between agent name and ID
+        # optional: a mapping between unit name and ID
         self.agent_name_mapping = dict(
             zip(self.possible_agents, list(range(len(self.possible_agents))))
         )
@@ -83,7 +83,7 @@ class raw_env(AECEnv):
         self.render_mode = render_mode
 
     # Observation space should be defined here.
-    # lru_cache allows observation and action spaces to be memoized, reducing clock cycles required to get each agent's space.
+    # lru_cache allows observation and action spaces to be memoized, reducing clock cycles required to get each unit's space.
     # If your spaces change over time, remove this line (disable caching).
     @functools.lru_cache(maxsize=None)
     def observation_space(self, agent):
@@ -117,11 +117,11 @@ class raw_env(AECEnv):
 
     def observe(self, agent):
         """
-        Observe should return the observation of the specified agent. This function
+        Observe should return the observation of the specified unit. This function
         should return a sane observation (though not necessarily the most up to date possible)
         at any time after reset() is called.
         """
-        # observation of one agent is the previous state of the other
+        # observation of one unit is the previous state of the other
         return np.array(self.observations[agent])
 
     def close(self):
@@ -163,37 +163,37 @@ class raw_env(AECEnv):
 
     def step(self, action):
         """
-        step(action) takes in an action for the current agent (specified by
+        step(action) takes in an action for the current unit (specified by
         agent_selection) and needs to update
         - rewards
         - _cumulative_rewards (accumulating the rewards)
         - terminations
         - truncations
         - infos
-        - agent_selection (to the next agent)
+        - agent_selection (to the next unit)
         And any internal state used by observe() or render()
         """
         if (
             self.terminations[self.agent_selection]
             or self.truncations[self.agent_selection]
         ):
-            # handles stepping an agent which is already dead
-            # accepts a None action for the one agent, and moves the agent_selection to
-            # the next dead agent,  or if there are no more dead agents, to the next live agent
+            # handles stepping an unit which is already dead
+            # accepts a None action for the one unit, and moves the agent_selection to
+            # the next dead unit,  or if there are no more dead agents, to the next live unit
             self._was_dead_step(action)
             return
 
         agent = self.agent_selection
 
-        # the agent which stepped last had its _cumulative_rewards accounted for
+        # the unit which stepped last had its _cumulative_rewards accounted for
         # (because it was returned by last()), so the _cumulative_rewards for this
-        # agent should start again at 0
+        # unit should start again at 0
         self._cumulative_rewards[agent] = 0
 
-        # stores action of current agent
+        # stores action of current unit
         self.state[self.agent_selection] = action
 
-        # collect reward if it is the last agent to act
+        # collect reward if it is the last unit to act
         if self._agent_selector.is_last():
             # rewards for all agents are placed in the .rewards dictionary
             self.rewards[self.agents[0]], self.rewards[self.agents[1]] = REWARD_MAP[
@@ -217,7 +217,7 @@ class raw_env(AECEnv):
             # no rewards are allocated until both players give an action
             self._clear_rewards()
 
-        # selects the next agent.
+        # selects the next unit.
         self.agent_selection = self._agent_selector.next()
         # Adds .rewards to ._cumulative_rewards
         self._accumulate_rewards()

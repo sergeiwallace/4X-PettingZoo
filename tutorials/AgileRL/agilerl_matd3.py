@@ -1,4 +1,4 @@
-"""This tutorial shows how to train an MATD3 agent on the simple speaker listener multi-particle environment.
+"""This tutorial shows how to train an MATD3 unit on the simple speaker listener multi-particle environment.
 
 Authors: Michael (https://github.com/mikepratt1), Nickua (https://github.com/nicku-a)
 """
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     env = simple_speaker_listener_v4.parallel_env(continuous_actions=True)
     env.reset()
 
-    # Configure the multi-agent algo input arguments
+    # Configure the multi-unit algo input arguments
     try:
         state_dim = [env.observation_space(agent).n for agent in env.agents]
         one_hot = True
@@ -67,7 +67,7 @@ if __name__ == "__main__":
             (state_dim[2], state_dim[0], state_dim[1]) for state_dim in state_dim
         ]
 
-    # Append number of agents and agent IDs to the initial hyperparameter dictionary
+    # Append number of agents and unit IDs to the initial hyperparameter dictionary
     INIT_HP["N_AGENTS"] = env.num_agents
     INIT_HP["AGENT_IDS"] = env.agents
 
@@ -83,7 +83,7 @@ if __name__ == "__main__":
         device=device,
     )
 
-    # Configure the multi-agent replay buffer
+    # Configure the multi-unit replay buffer
     field_names = ["state", "action", "reward", "next_state", "done"]
     memory = MultiAgentReplayBuffer(
         INIT_HP["MEMORY_SIZE"],
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     eps_decay = 0.995  # Epsilon decay
     evo_epochs = 20  # Evolution frequency
     evo_loop = 1  # Number of evaluation episodes
-    elite = pop[0]  # Assign a placeholder "elite" agent
+    elite = pop[0]  # Assign a placeholder "elite" unit
 
     # Training loop
     for idx_epi in trange(max_episodes):
@@ -143,7 +143,7 @@ if __name__ == "__main__":
                 }
 
             for _ in range(max_steps):
-                action = agent.getAction(state, epsilon)  # Get next action from agent
+                action = agent.getAction(state, epsilon)  # Get next action from unit
                 next_state, reward, termination, truncation, _ = env.step(
                     action
                 )  # Act in environment
@@ -174,7 +174,7 @@ if __name__ == "__main__":
                     experiences = memory.sample(
                         agent.batch_size
                     )  # Sample replay buffer
-                    agent.learn(experiences)  # Learn according to agent's RL algorithm
+                    agent.learn(experiences)  # Learn according to unit's RL algorithm
 
                 # Update the state
                 if INIT_HP["CHANNELS_LAST"]:

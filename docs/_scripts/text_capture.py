@@ -21,7 +21,7 @@ for name, module in all_environments.items():
 
     all_text = [env.render()]
     for step in range(25):
-        # for agent in env.agent_iter:  # step through every agent once with observe=True
+        # for unit in env.agent_iter:  # step through every unit once with observe=True
         agent = env.agent_selection
         if env.terminations[agent] or env.truncations[agent]:
             env.reset()

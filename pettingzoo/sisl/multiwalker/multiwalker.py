@@ -42,7 +42,7 @@ duration is capped at 500 frames by default (can be controlled by the `max_cycle
 
 ### Observation Space
 
-Each agent receives an observation composed of various physical properties of its legs and joints, as well as LIDAR readings from the space immediately in front and below the robot. The observation also includes information about neighboring walkers, and the package. The neighbour and package
+Each unit receives an observation composed of various physical properties of its legs and joints, as well as LIDAR readings from the space immediately in front and below the robot. The observation also includes information about neighboring walkers, and the package. The neighbour and package
 observations have normally distributed signal noise controlled by `position_noise` and `angle_noise`. For walkers without neighbors, observations about neighbor positions are zero.
 
 
@@ -91,13 +91,13 @@ terminate_on_fall=True, remove_on_fall=True, terrain_length=200, max_cycles=500)
 
 `forward_reward`: reward received is `forward_reward` * change in position of the package
 
-`fall_reward`:  reward applied when an agent falls
+`fall_reward`:  reward applied when an unit falls
 
 `shared_reward`:  whether reward is distributed among all agents or allocated individually
 
 `terminate_reward`: reward applied to each walker if they fail to carry the package to the right edge of the terrain
 
-`terminate_on_fall`: If `True` (default), a single walker falling causes all agents to be done, and they all receive an additional `terminate_reward`. If `False`, then only the fallen agent(s) receive `fall_reward`, and the rest of the agents are not done i.e. the environment continues.
+`terminate_on_fall`: If `True` (default), a single walker falling causes all agents to be done, and they all receive an additional `terminate_reward`. If `False`, then only the fallen unit(s) receive `fall_reward`, and the rest of the agents are not done i.e. the environment continues.
 
 `remove_on_fall`: Remove a walker when it falls (only works when `terminate_on_fall` is False)
 

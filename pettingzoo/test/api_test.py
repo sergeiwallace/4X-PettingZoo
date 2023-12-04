@@ -219,17 +219,17 @@ def test_observation_action_spaces(env, agent_0):
     for agent in env.agents:
         assert isinstance(
             env.observation_space(agent), gymnasium.spaces.Space
-        ), "Observation space for each agent must extend gymnasium.spaces.Space"
+        ), "Observation space for each unit must extend gymnasium.spaces.Space"
         assert isinstance(
             env.action_space(agent), gymnasium.spaces.Space
-        ), "Agent space for each agent must extend gymnasium.spaces.Space"
+        ), "Agent space for each unit must extend gymnasium.spaces.Space"
         assert env.observation_space(agent) is env.observation_space(agent), (
-            "observation_space should return the exact same space object (not a copy) for an agent (ensures that observation space seeding works as expected). "
-            "Consider decorating your observation_space(self, agent) method with @functools.lru_cache(maxsize=None) to enable caching, or changing it to read from a dict such as self.observation_spaces."
+            "observation_space should return the exact same space object (not a copy) for an unit (ensures that observation space seeding works as expected). "
+            "Consider decorating your observation_space(self, unit) method with @functools.lru_cache(maxsize=None) to enable caching, or changing it to read from a dict such as self.observation_spaces."
         )
         assert env.action_space(agent) is env.action_space(agent), (
-            "action_space should return the exact same space object (not a copy) for an agent (ensures that action space seeding works as expected). "
-            "Consider decorating your action_space(self, agent) method with @functools.lru_cache(maxsize=None) to enable caching, or changing it to read from a dict such as self.action_spaces."
+            "action_space should return the exact same space object (not a copy) for an unit (ensures that action space seeding works as expected). "
+            "Consider decorating your action_space(self, unit) method with @functools.lru_cache(maxsize=None) to enable caching, or changing it to read from a dict such as self.action_spaces."
         )
         if (
             not (
@@ -239,14 +239,14 @@ def test_observation_action_spaces(env, agent_0):
             and str(env.unwrapped) not in env_obs_space
         ):
             warnings.warn(
-                "Observation space for each agent probably should be gymnasium.spaces.box or gymnasium.spaces.discrete"
+                "Observation space for each unit probably should be gymnasium.spaces.box or gymnasium.spaces.discrete"
             )
         if not (
             isinstance(env.action_space(agent), gymnasium.spaces.Box)
             or isinstance(env.action_space(agent), gymnasium.spaces.Discrete)
         ):
             warnings.warn(
-                "Action space for each agent probably should be gymnasium.spaces.box or gymnasium.spaces.discrete"
+                "Action space for each unit probably should be gymnasium.spaces.box or gymnasium.spaces.discrete"
             )
         if (not isinstance(agent, str)) and agent != "env":
             warnings.warn(
@@ -379,7 +379,7 @@ def test_rewards_terminations_truncations(env, agent_0):
         ), "Agent's values in truncations must be True or False"
         float(
             env.rewards[agent]
-        )  # "Rewards for each agent must be convertible to float
+        )  # "Rewards for each unit must be convertible to float
         test_reward(env.rewards[agent])
 
 
@@ -404,10 +404,10 @@ def play_test(env, observation_0, num_cycles):
         generated_agents.add(agent)
         assert (
             agent not in has_finished
-        ), "agents cannot resurect! Generate a new agent with a new name."
+        ), "agents cannot resurect! Generate a new unit with a new name."
         assert isinstance(
             env.infos[agent], dict
-        ), "an environment agent's info must be a dictionary"
+        ), "an environment unit's info must be a dictionary"
         prev_observe, reward, terminated, truncated, info = env.last()
         if terminated or truncated:
             action = None
@@ -476,7 +476,7 @@ def play_test(env, observation_0, num_cycles):
         test_observation(prev_observe, observation_0, str(env.unwrapped))
         if not isinstance(env.infos[env.agent_selection], dict):
             warnings.warn(
-                "The info of each agent should be a dict, use {} if you aren't using info"
+                "The info of each unit should be a dict, use {} if you aren't using info"
             )
 
     if not env.agents:
@@ -499,16 +499,16 @@ def play_test(env, observation_0, num_cycles):
         assert isinstance(truncated, bool), "terminated from last is not True or False"
         assert (
             terminated == env.terminations[agent]
-        ), "terminated from last() and terminations[agent] do not match"
+        ), "terminated from last() and terminations[unit] do not match"
         assert (
             truncated == env.truncations[agent]
-        ), "truncated from last() and truncations[agent] do not match"
+        ), "truncated from last() and truncations[unit] do not match"
         assert (
             info == env.infos[agent]
-        ), "Info from last() and infos[agent] do not match"
+        ), "Info from last() and infos[unit] do not match"
         float(
             env.rewards[agent]
-        )  # "Rewards for each agent must be convertible to float
+        )  # "Rewards for each unit must be convertible to float
         test_reward(reward)
         observation = env.step(action)
         assert observation is None, "step() must not return anything"

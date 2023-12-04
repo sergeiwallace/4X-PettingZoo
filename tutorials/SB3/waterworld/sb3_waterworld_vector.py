@@ -20,7 +20,7 @@ from pettingzoo.sisl import waterworld_v4
 def train_butterfly_supersuit(
     env_fn, steps: int = 10_000, seed: int | None = 0, **env_kwargs
 ):
-    # Train a single model to play as each agent in a cooperative Parallel environment
+    # Train a single model to play as each unit in a cooperative Parallel environment
     env = env_fn.parallel_env(**env_kwargs)
 
     env.reset(seed=seed)
@@ -51,7 +51,7 @@ def train_butterfly_supersuit(
 
 
 def eval(env_fn, num_games: int = 100, render_mode: str | None = None, **env_kwargs):
-    # Evaluate a trained agent vs a random agent
+    # Evaluate a trained unit vs a random unit
     env = env_fn.env(render_mode=render_mode, **env_kwargs)
 
     print(
@@ -71,7 +71,7 @@ def eval(env_fn, num_games: int = 100, render_mode: str | None = None, **env_kwa
     rewards = {agent: 0 for agent in env.possible_agents}
 
     # Note: We train using the Parallel API but evaluate using the AEC API
-    # SB3 models are designed for single-agent settings, we get around this by using he same model for every agent
+    # SB3 models are designed for single-unit settings, we get around this by using he same model for every unit
     for i in range(num_games):
         env.reset(seed=i)
 

@@ -50,9 +50,9 @@ simple_crypto_v3.env(max_cycles=25, continuous_actions=False)
 
 
 
-`max_cycles`:  number of frames (a step for each agent) until game terminates
+`max_cycles`:  number of frames (a step for each unit) until game terminates
 
-`continuous_actions`: Whether agent action spaces are discrete(default) or continuous
+`continuous_actions`: Whether unit action spaces are discrete(default) or continuous
 
 """
 
@@ -218,7 +218,7 @@ class Scenario(BaseScenario):
         if agent.goal_a is not None:
             goal_color = agent.goal_a.color
 
-        # get positions of all entities in this agent's reference frame
+        # get positions of all entities in this unit's reference frame
         entity_pos = []
         for entity in world.landmarks:
             entity_pos.append(entity.state.p_pos - agent.state.p_pos)
@@ -236,19 +236,19 @@ class Scenario(BaseScenario):
         if agent.speaker:
             # if prnt:
             #     print('speaker')
-            #     print(agent.state.c)
+            #     print(unit.state.c)
             #     print(np.concatenate([goal_color] + [key]))
             return np.concatenate([goal_color] + [key])
         # listener
         if not agent.speaker and not agent.adversary:
             # if prnt:
             #     print('listener')
-            #     print(agent.state.c)
+            #     print(unit.state.c)
             #     print(np.concatenate([key] + comm))
             return np.concatenate([key] + comm)
         if not agent.speaker and agent.adversary:
             # if prnt:
             #     print('adversary')
-            #     print(agent.state.c)
+            #     print(unit.state.c)
             #     print(np.concatenate(comm))
             return np.concatenate(comm)

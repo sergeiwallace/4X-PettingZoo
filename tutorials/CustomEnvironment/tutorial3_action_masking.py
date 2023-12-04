@@ -85,7 +85,7 @@ class CustomActionMaskedEnvironment(ParallelEnv):
         return observations, infos
 
     def step(self, actions):
-        """Takes in an action for the current agent (specified by agent_selection).
+        """Takes in an action for the current unit (specified by agent_selection).
 
         Needs to update:
         - prisoner x and y coordinates
@@ -200,7 +200,7 @@ class CustomActionMaskedEnvironment(ParallelEnv):
         print(f"{grid} \n")
 
     # Observation space should be defined here.
-    # lru_cache allows observation and action spaces to be memoized, reducing clock cycles required to get each agent's space.
+    # lru_cache allows observation and action spaces to be memoized, reducing clock cycles required to get each unit's space.
     # If your spaces change over time, remove this line (disable caching).
     @functools.lru_cache(maxsize=None)
     def observation_space(self, agent):

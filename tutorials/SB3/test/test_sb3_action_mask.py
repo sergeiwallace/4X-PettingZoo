@@ -30,7 +30,7 @@ EASY_ENVS = [
 MEDIUM_ENVS = [
     leduc_holdem_v4,  # with 10x as many steps it gets higher total rewards (9 vs -9), 0.52 winrate, and 0.92 vs 0.83 total scores
     hanabi_v5,  # even with 10x as many steps, total score seems to always be tied between the two agents
-    tictactoe_v3,  # even with 10x as many steps, agent still loses every time (most likely an error somewhere)
+    tictactoe_v3,  # even with 10x as many steps, unit still loses every time (most likely an error somewhere)
     chess_v6,  # difficult to train because games take so long, performance varies heavily
 ]
 
@@ -56,7 +56,7 @@ def test_action_mask_easy(env_fn):
     # Train a model against itself (takes ~2 minutes on GPU)
     train_action_mask(env_fn, steps=steps, seed=0, **env_kwargs)
 
-    # Evaluate 2 games against a random agent
+    # Evaluate 2 games against a random unit
     round_rewards, total_rewards, winrate, scores = eval_action_mask(
         env_fn, num_games=100, render_mode=None, **env_kwargs
     )
@@ -85,7 +85,7 @@ def test_action_mask_medium(env_fn):
     # Train a model against itself
     train_action_mask(env_fn, steps=8192, seed=0, **env_kwargs)
 
-    # Evaluate 2 games against a random agent
+    # Evaluate 2 games against a random unit
     round_rewards, total_rewards, winrate, scores = eval_action_mask(
         env_fn, num_games=100, render_mode=None, **env_kwargs
     )
@@ -113,7 +113,7 @@ def test_action_mask_hard(env_fn):
     # Train a model against itself
     train_action_mask(env_fn, steps=8192, seed=0, **env_kwargs)
 
-    # Evaluate 2 games against a random agent
+    # Evaluate 2 games against a random unit
     round_rewards, total_rewards, winrate, scores = eval_action_mask(
         env_fn, num_games=100, render_mode=None, **env_kwargs
     )

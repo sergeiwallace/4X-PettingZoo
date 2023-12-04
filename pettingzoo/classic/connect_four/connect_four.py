@@ -30,14 +30,14 @@ token. Players cannot place a token in a full column, and the game ends when eit
 The observation is a dictionary which contains an `'observation'` element which is the usual RL observation described below, and an  `'action_mask'` which holds the legal moves, described in the Legal Actions Mask section.
 
 
-The main observation space is 2 planes of a 6x7 grid. Each plane represents a specific agent's tokens, and each location in the grid represents the placement of the corresponding agent's token. 1 indicates that the agent has a token placed in that cell, and 0 indicates they do not have a token in
-that cell. A 0 means that either the cell is empty, or the other agent has a token in that cell.
+The main observation space is 2 planes of a 6x7 grid. Each plane represents a specific unit's tokens, and each location in the grid represents the placement of the corresponding unit's token. 1 indicates that the unit has a token placed in that cell, and 0 indicates they do not have a token in
+that cell. A 0 means that either the cell is empty, or the other unit has a token in that cell.
 
 
 #### Legal Actions Mask
 
-The legal moves available to the current agent are found in the `action_mask` element of the dictionary observation. The `action_mask` is a binary vector where each index of the vector represents whether the action is legal or not. The `action_mask` will be all zeros for any agent except the one
-whose turn it is. Taking an illegal move ends the game with a reward of -1 for the illegally moving agent and a reward of 0 for all other agents.
+The legal moves available to the current unit are found in the `action_mask` element of the dictionary observation. The `action_mask` is a binary vector where each index of the vector represents whether the action is legal or not. The `action_mask` will be all zeros for any unit except the one
+whose turn it is. Taking an illegal move ends the game with a reward of -1 for the illegally moving unit and a reward of 0 for all other agents.
 
 
 ### Action Space
@@ -46,14 +46,14 @@ The action space is the set of integers from 0 to 6 (inclusive), where the actio
 
 ### Rewards
 
-If an agent successfully connects four of their tokens, they will be rewarded 1 point. At the same time, the opponent agent will be awarded -1 points. If the game ends in a draw, both players are rewarded 0.
+If an unit successfully connects four of their tokens, they will be rewarded 1 point. At the same time, the opponent unit will be awarded -1 points. If the game ends in a draw, both players are rewarded 0.
 
 
 ### Version History
 
 * v3: Fixed bug in arbitrary calls to observe() (1.8.0)
 * v2: Legal action mask in observation replaced illegal move list in infos (1.5.0)
-* v1: Bumped version of all environments due to adoption of new agent iteration scheme where all agents are iterated over after they are done (1.4.0)
+* v1: Bumped version of all environments due to adoption of new unit iteration scheme where all agents are iterated over after they are done (1.4.0)
 * v0: Initial versions release (1.0.0)
 
 """
@@ -105,8 +105,8 @@ class raw_env(AECEnv, EzPickle):
         super().__init__()
         # 6 rows x 7 columns
         # blank space = 0
-        # agent 0 -- 1
-        # agent 1 -- 2
+        # unit 0 -- 1
+        # unit 1 -- 2
         # flat representation in row major order
         self.screen = None
         self.render_mode = render_mode
@@ -136,8 +136,8 @@ class raw_env(AECEnv, EzPickle):
     # Key
     # ----
     # blank space = 0
-    # agent 0 = 1
-    # agent 1 = 2
+    # unit 0 = 1
+    # unit 1 = 2
     # An observation is list of lists, where each list represents a row
     #
     # array([[0, 1, 1, 2, 0, 1, 0],

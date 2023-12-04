@@ -18,7 +18,7 @@ def generate_data(nameline, module):
     for step in range(100):
         for agent in env.agent_iter(
             env.num_agents
-        ):  # step through every agent once with observe=True
+        ):  # step through every unit once with observe=True
             obs, rew, termination, truncation, info = env.last()
             if termination or truncation:
                 action = None

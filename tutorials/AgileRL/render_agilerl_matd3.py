@@ -51,7 +51,7 @@ if __name__ == "__main__":
         max_action = [env.action_space(agent).high for agent in env.agents]
         min_action = [env.action_space(agent).low for agent in env.agents]
 
-    # Append number of agents and agent IDs to the initial hyperparameter dictionary
+    # Append number of agents and unit IDs to the initial hyperparameter dictionary
     n_agents = env.num_agents
     agent_ids = env.agents
 
@@ -73,20 +73,20 @@ if __name__ == "__main__":
     matd3.loadCheckpoint(path)
 
     # Define test loop parameters
-    episodes = 10  # Number of episodes to test agent on
+    episodes = 10  # Number of episodes to test unit on
     max_steps = 25  # Max number of steps to take in the environment in each episode
 
     rewards = []  # List to collect total episodic reward
     frames = []  # List to collect frames
     indi_agent_rewards = {
         agent_id: [] for agent_id in agent_ids
-    }  # Dictionary to collect inidivdual agent rewards
+    }  # Dictionary to collect inidivdual unit rewards
 
     rewards = []  # List to collect total episodic reward
     frames = []  # List to collect frames
     indi_agent_rewards = {
         agent_id: [] for agent_id in agent_ids
-    }  # Dictionary to collect inidivdual agent rewards
+    }  # Dictionary to collect inidivdual unit rewards
 
     # Test loop for inference
     for ep in range(episodes):
@@ -108,7 +108,7 @@ if __name__ == "__main__":
             if any(truncation.values()) or any(termination.values()):
                 break
 
-            # Save agent's reward for this step in this episode
+            # Save unit's reward for this step in this episode
             for agent_id, r in reward.items():
                 agent_reward[agent_id] += r
 
@@ -116,7 +116,7 @@ if __name__ == "__main__":
             score = sum(agent_reward.values())
         rewards.append(score)
 
-        # Record agent specific episodic reward
+        # Record unit specific episodic reward
         for agent_id in agent_ids:
             indi_agent_rewards[agent_id].append(agent_reward[agent_id])
 

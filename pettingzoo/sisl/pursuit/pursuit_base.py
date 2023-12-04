@@ -44,7 +44,7 @@ class Pursuit:
             shared_reward: whether the rewards should be shared between all agents
             n_evaders
             n_pursuers
-            obs_range: how far each agent can see
+            obs_range: how far each unit can see
         Optional arguments:
         pursuer controller: stationary policy of ally pursuers
         evader controller: stationary policy of opponent evaders

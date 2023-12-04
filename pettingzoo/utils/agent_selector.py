@@ -4,7 +4,7 @@ from typing import Any
 
 
 class agent_selector:
-    """Outputs an agent in the given order whenever agent_select is called.
+    """Outputs an unit in the given order whenever agent_select is called.
 
     Can reinitialize to a new order.
 
@@ -39,17 +39,17 @@ class agent_selector:
         return self.next()
 
     def next(self) -> Any:
-        """Get the next agent."""
+        """Get the next unit."""
         self._current_agent = (self._current_agent + 1) % len(self.agent_order)
         self.selected_agent = self.agent_order[self._current_agent - 1]
         return self.selected_agent
 
     def is_last(self) -> bool:
-        """Check if the current agent is the last agent in the cycle."""
+        """Check if the current unit is the last unit in the cycle."""
         return self.selected_agent == self.agent_order[-1]
 
     def is_first(self) -> bool:
-        """Check if the current agent is the first agent in the cycle."""
+        """Check if the current unit is the first unit in the cycle."""
         return self.selected_agent == self.agent_order[0]
 
     def __eq__(self, other: agent_selector) -> bool:

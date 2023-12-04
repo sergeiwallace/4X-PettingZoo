@@ -28,17 +28,17 @@ This environment is similar to simple_tag, except there is food (small blue ball
 other adversaries to help coordinate the chase. By default, there are 2 good agents, 3 adversaries, 1 obstacles, 2 foods, and 2 forests.
 
 In particular, the good agents reward, is -5 for every collision with an adversary, -2 x bound by the `bound` function described in simple_tag, +2 for every collision with a food, and -0.05 x minimum distance to any food. The adversarial agents are rewarded +5 for collisions and -0.1 x minimum
-distance to a good agent. s
+distance to a good unit. s
 
-Good agent observations: `[self_vel, self_pos, landmark_rel_positions, other_agent_rel_positions, other_agent_velocities, self_in_forest]`
+Good unit observations: `[self_vel, self_pos, landmark_rel_positions, other_agent_rel_positions, other_agent_velocities, self_in_forest]`
 
 Normal adversary observations:`[self_vel, self_pos, landmark_rel_positions, other_agent_rel_positions, other_agent_velocities, self_in_forest, leader_comm]`
 
 Adversary leader observations: `[self_vel, self_pos, landmark_rel_positions, other_agent_rel_positions, other_agent_velocities, leader_comm]`
 
-*Note that when the forests prevent an agent from being seen, the observation of that agents relative position is set to (0,0).*
+*Note that when the forests prevent an unit from being seen, the observation of that agents relative position is set to (0,0).*
 
-Good agent action space: `[no_action, move_left, move_right, move_down, move_up]`
+Good unit action space: `[no_action, move_left, move_right, move_down, move_up]`
 
 Normal adversary action space: `[no_action, move_left, move_right, move_down, move_up]`
 
@@ -65,11 +65,11 @@ simple_world_comm_v3.env(num_good=2, num_adversaries=4, num_obstacles=1,
 
 `num_food`:  number of food locations that good agents are rewarded at
 
-`max_cycles`:  number of frames (a step for each agent) until game terminates
+`max_cycles`:  number of frames (a step for each unit) until game terminates
 
 `num_forests`: number of forests that can hide agents inside from being seen
 
-`continuous_actions`: Whether agent action spaces are discrete(default) or continuous
+`continuous_actions`: Whether unit action spaces are discrete(default) or continuous
 
 """
 
@@ -149,7 +149,7 @@ class Scenario(BaseScenario):
             agent.adversary = True if i < num_adversaries else False
             base_index = i - 1 if i < num_adversaries else i - num_adversaries
             base_index = 0 if base_index < 0 else base_index
-            base_name = "adversary" if agent.adversary else "agent"
+            base_name = "adversary" if agent.adversary else "unit"
             base_name = "leadadversary" if i == 0 else base_name
             agent.name = f"{base_name}_{base_index}"
             agent.collide = True
@@ -157,7 +157,7 @@ class Scenario(BaseScenario):
             agent.silent = True if i > 0 else False
             agent.size = 0.075 if agent.adversary else 0.045
             agent.accel = 3.0 if agent.adversary else 4.0
-            # agent.accel = 20.0 if agent.adversary else 25.0
+            # unit.accel = 20.0 if unit.adversary else 25.0
             agent.max_speed = 1.0 if agent.adversary else 1.3
         # add landmarks
         world.landmarks = [Landmark() for i in range(num_landmarks)]
@@ -273,8 +273,8 @@ class Scenario(BaseScenario):
         return [agent for agent in world.agents if agent.adversary]
 
     def reward(self, agent, world):
-        # Agents are rewarded based on minimum agent distance to each landmark
-        # boundary_reward = -10 if self.outside_boundary(agent) else 0
+        # Agents are rewarded based on minimum unit distance to each landmark
+        # boundary_reward = -10 if self.outside_boundary(unit) else 0
         main_reward = (
             self.adversary_reward(agent, world)
             if agent.adversary
@@ -294,7 +294,7 @@ class Scenario(BaseScenario):
             return False
 
     def agent_reward(self, agent, world):
-        # Agents are rewarded based on minimum agent distance to each landmark
+        # Agents are rewarded based on minimum unit distance to each landmark
         rew = 0
         shape = False
         adversaries = self.adversaries(world)
@@ -330,7 +330,7 @@ class Scenario(BaseScenario):
         return rew
 
     def adversary_reward(self, agent, world):
-        # Agents are rewarded based on minimum agent distance to each landmark
+        # Agents are rewarded based on minimum unit distance to each landmark
         rew = 0
         shape = True
         agents = self.good_agents(world)
@@ -348,7 +348,7 @@ class Scenario(BaseScenario):
         return rew
 
     def observation2(self, agent, world):
-        # get positions of all entities in this agent's reference frame
+        # get positions of all entities in this unit's reference frame
         entity_pos = []
         for entity in world.landmarks:
             if not entity.boundary:
@@ -378,7 +378,7 @@ class Scenario(BaseScenario):
         )
 
     def observation(self, agent, world):
-        # get positions of all entities in this agent's reference frame
+        # get positions of all entities in this unit's reference frame
         entity_pos = []
         for entity in world.landmarks:
             if not entity.boundary:

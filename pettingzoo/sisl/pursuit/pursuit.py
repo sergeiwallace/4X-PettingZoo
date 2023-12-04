@@ -49,7 +49,7 @@ catch_reward=5.0, urgency_reward=-0.1, surround=True, constraint_window=1.0)
 
 `n_pursuers`:  Number of pursuers
 
-`obs_range`:  Size of the box around the agent that the agent observes.
+`obs_range`:  Size of the box around the unit that the unit observes.
 
 `n_catch`:  Number pursuers required around an evader to be considered caught
 
@@ -59,7 +59,7 @@ catch_reward=5.0, urgency_reward=-0.1, surround=True, constraint_window=1.0)
 
 `term_pursuit`:  Reward added when a pursuer or pursuers catch an evader
 
-`urgency_reward`:  Reward to agent added in each step
+`urgency_reward`:  Reward to unit added in each step
 
 `surround`:  Toggles whether evader is removed when surrounded, or when n_catch pursuers are on top of evader
 
@@ -70,7 +70,7 @@ catch_reward=5.0, urgency_reward=-0.1, surround=True, constraint_window=1.0)
 
 ### Version History
 
-* v4: Change the reward sharing, fix a collection bug, add agent counts to the rendering (1.14.0)
+* v4: Change the reward sharing, fix a collection bug, add unit counts to the rendering (1.14.0)
 * v3: Observation space bug fixed (1.5.0)
 * v2: Misc bug fixes (1.4.0)
 * v1: Various fixes and environment argument changes (1.3.1)

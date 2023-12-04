@@ -6,8 +6,10 @@ import numpy as np
 from gymnasium.spaces import Discrete, MultiDiscrete
 
 from pettingzoo import ParallelEnv
+from unit import Unit
 
-class Agent:
+
+class Builder(Unit):
     """The metadata holds environment constants.
 
     The "name" metadata allows the environment to be pretty printed.
@@ -17,7 +19,7 @@ class Agent:
         "name": "4x_grid_v0",
     }
 
-    def __init__(self):
+    def __init__(self, x_pos, y_pos):
         """The init method takes in environment arguments.
 
         Should define the following attributes:
@@ -34,7 +36,5 @@ class Agent:
         These attributes should not be changed after initialization.
         """
 
-        self.x_pos = None
-        self.y_pos = None
-        self.type = None
+        super().__init__(x_pos, y_pos, unit_type="builder")
 

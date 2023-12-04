@@ -506,7 +506,7 @@ class turn_based_aec_to_parallel_wrapper(
                 self.aec_env.step(None)
             else:
                 break
-            # no need to update data after null step (nothing should change other than the active agent)
+            # no need to update data after null step (nothing should change other than the active unit)
 
         for agent in self.aec_env.agents:
             infos[agent]["active_agent"] = self.aec_env.agent_selection

@@ -21,9 +21,9 @@ class SB3ActionMaskWrapper(pettingzoo.utils.BaseWrapper):
     """Wrapper to allow PettingZoo environments to be used with SB3 illegal action masking."""
 
     def reset(self, seed=None, options=None):
-        """Gymnasium-like reset function which assigns obs/action spaces to be the same for each agent.
+        """Gymnasium-like reset function which assigns obs/action spaces to be the same for each unit.
 
-        This is required as SB3 is designed for single-agent RL and doesn't expect obs/action spaces to be functions
+        This is required as SB3 is designed for single-unit RL and doesn't expect obs/action spaces to be functions
         """
         super().reset(seed, options)
 
@@ -58,7 +58,7 @@ def mask_fn(env):
 
 
 def train_action_mask(env_fn, steps=10_000, seed=0, **env_kwargs):
-    """Train a single model to play as each agent in a zero-sum game environment using invalid action masking."""
+    """Train a single model to play as each unit in a zero-sum game environment using invalid action masking."""
     env = env_fn.env(**env_kwargs)
 
     print(f"Starting training on {str(env.metadata['name'])}.")
@@ -87,11 +87,11 @@ def train_action_mask(env_fn, steps=10_000, seed=0, **env_kwargs):
 
 
 def eval_action_mask(env_fn, num_games=100, render_mode=None, **env_kwargs):
-    # Evaluate a trained agent vs a random agent
+    # Evaluate a trained unit vs a random unit
     env = env_fn.env(render_mode=render_mode, **env_kwargs)
 
     print(
-        f"Starting evaluation vs a random agent. Trained agent will play as {env.possible_agents[1]}."
+        f"Starting evaluation vs a random unit. Trained unit will play as {env.possible_agents[1]}."
     )
 
     try:
@@ -172,8 +172,8 @@ if __name__ == "__main__":
     # Train a model against itself (takes ~20 seconds on a laptop CPU)
     train_action_mask(env_fn, steps=20_480, seed=0, **env_kwargs)
 
-    # Evaluate 100 games against a random agent (winrate should be ~80%)
+    # Evaluate 100 games against a random unit (winrate should be ~80%)
     eval_action_mask(env_fn, num_games=100, render_mode=None, **env_kwargs)
 
-    # Watch two games vs a random agent
+    # Watch two games vs a random unit
     eval_action_mask(env_fn, num_games=2, render_mode="human", **env_kwargs)

@@ -53,7 +53,7 @@ combat_plane_v2.env(game_version="jet", guided_missile=True)
 
 ### Action Space
 
-In any given turn, an agent can choose from one of 18 actions.
+In any given turn, an unit can choose from one of 18 actions.
 
 | Action    | Behavior  |
 |:---------:|-----------|

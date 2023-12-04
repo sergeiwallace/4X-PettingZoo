@@ -218,7 +218,7 @@ class ParallelAtariEnv(ParallelEnv, EzPickle):
             terminations = {agent: True for agent in self.agents}
         else:
             lives = self.ale.allLives()
-            # an inactive agent in ale gets a -1 life.
+            # an inactive unit in ale gets a -1 life.
             terminations = {
                 agent: int(life) < 0
                 for agent, life in zip(self.possible_agents, lives)

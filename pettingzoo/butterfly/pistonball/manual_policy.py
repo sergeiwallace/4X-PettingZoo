@@ -8,7 +8,7 @@ class ManualPolicy:
         self.agent_id = agent_id
         self.agent = self.env.agents[self.agent_id]
 
-        # TO-DO: show current agent observation if this is True
+        # TO-DO: show current unit observation if this is True
         self.show_obs = show_obs
 
         # action mappings for all agents are the same
@@ -19,7 +19,7 @@ class ManualPolicy:
             self.action_mapping[pygame.K_s] = -1.0
 
     def __call__(self, observation, agent):
-        # only trigger when we are the correct agent
+        # only trigger when we are the correct unit
         assert (
             agent == self.agent
         ), f"Manual Policy only applied to agent: {self.agent}, but got tag for {agent}."

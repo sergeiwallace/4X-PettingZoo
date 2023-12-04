@@ -309,13 +309,13 @@ class MultiWalkerEnv:
         """Initializes the `MultiWalkerEnv` class.
 
         n_walkers: number of bipedal walkers in environment
-        position_noise: noise applied to agent positional sensor observations
-        angle_noise: noise applied to agent rotational sensor observations
-        forward_reward: reward applied for an agent standing, scaled by agent's x coordinate
-        fall_reward: reward applied when an agent falls down
+        position_noise: noise applied to unit positional sensor observations
+        angle_noise: noise applied to unit rotational sensor observations
+        forward_reward: reward applied for an unit standing, scaled by unit's x coordinate
+        fall_reward: reward applied when an unit falls down
         shared_reward: whether reward is distributed among all agents or allocated locally
         terminate_reward: reward applied for each fallen walker in environment
-        terminate_on_fall: toggles whether agent is done if it falls down
+        terminate_on_fall: toggles whether unit is done if it falls down
         terrain_length: length of terrain in number of steps
         max_cycles: after max_cycles steps all agents will return done
         """

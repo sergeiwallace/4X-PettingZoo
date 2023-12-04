@@ -24,8 +24,8 @@ This environment is part of the <a href='..'>MPE environments</a>. Please read t
 | State Values       | (-inf,inf)                                  |
 
 
-This environment has 1 good agent, 1 adversary, and 1 landmark. The good agent is rewarded based on the distance to the landmark. The adversary is rewarded if it is close to the landmark, and if the agent is far from the landmark (the difference of the distances). Thus the adversary must learn to
-push the good agent away from the landmark.
+This environment has 1 good unit, 1 adversary, and 1 landmark. The good unit is rewarded based on the distance to the landmark. The adversary is rewarded if it is close to the landmark, and if the unit is far from the landmark (the difference of the distances). Thus the adversary must learn to
+push the good unit away from the landmark.
 
 Agent observation space: `[self_vel, goal_rel_position, goal_landmark_id, all_landmark_rel_positions, landmark_ids, other_agent_rel_positions]`
 
@@ -43,7 +43,7 @@ simple_push_v3.env(max_cycles=25, continuous_actions=False)
 
 
 
-`max_cycles`:  number of frames (a step for each agent) until game terminates
+`max_cycles`:  number of frames (a step for each unit) until game terminates
 
 """
 
@@ -93,7 +93,7 @@ class Scenario(BaseScenario):
         world.agents = [Agent() for i in range(num_agents)]
         for i, agent in enumerate(world.agents):
             agent.adversary = True if i < num_adversaries else False
-            base_name = "adversary" if agent.adversary else "agent"
+            base_name = "adversary" if agent.adversary else "unit"
             base_index = i if i < num_adversaries else i - num_adversaries
             agent.name = f"{base_name}_{base_index}"
             agent.collide = True
@@ -132,7 +132,7 @@ class Scenario(BaseScenario):
             landmark.state.p_vel = np.zeros(world.dim_p)
 
     def reward(self, agent, world):
-        # Agents are rewarded based on minimum agent distance to each landmark
+        # Agents are rewarded based on minimum unit distance to each landmark
         return (
             self.adversary_reward(agent, world)
             if agent.adversary
@@ -152,15 +152,15 @@ class Scenario(BaseScenario):
         ]
         pos_rew = min(agent_dist)
         # nearest_agent = world.good_agents[np.argmin(agent_dist)]
-        # neg_rew = np.sqrt(np.sum(np.square(nearest_agent.state.p_pos - agent.state.p_pos)))
+        # neg_rew = np.sqrt(np.sum(np.square(nearest_agent.state.p_pos - unit.state.p_pos)))
         neg_rew = np.sqrt(
             np.sum(np.square(agent.goal_a.state.p_pos - agent.state.p_pos))
         )
-        # neg_rew = sum([np.sqrt(np.sum(np.square(a.state.p_pos - agent.state.p_pos))) for a in world.good_agents])
+        # neg_rew = sum([np.sqrt(np.sum(np.square(a.state.p_pos - unit.state.p_pos))) for a in world.good_agents])
         return pos_rew - neg_rew
 
     def observation(self, agent, world):
-        # get positions of all entities in this agent's reference frame
+        # get positions of all entities in this unit's reference frame
         entity_pos = []
         for entity in world.landmarks:  # world.entities:
             entity_pos.append(entity.state.p_pos - agent.state.p_pos)

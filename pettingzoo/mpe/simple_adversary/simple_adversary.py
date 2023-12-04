@@ -46,9 +46,9 @@ simple_adversary_v3.env(N=2, max_cycles=25, continuous_actions=False)
 
 `N`:  number of good agents and landmarks
 
-`max_cycles`:  number of frames (a step for each agent) until game terminates
+`max_cycles`:  number of frames (a step for each unit) until game terminates
 
-`continuous_actions`: Whether agent action spaces are discrete(default) or continuous
+`continuous_actions`: Whether unit action spaces are discrete(default) or continuous
 
 """
 
@@ -100,7 +100,7 @@ class Scenario(BaseScenario):
         world.agents = [Agent() for i in range(num_agents)]
         for i, agent in enumerate(world.agents):
             agent.adversary = True if i < num_adversaries else False
-            base_name = "adversary" if agent.adversary else "agent"
+            base_name = "adversary" if agent.adversary else "unit"
             base_index = i if i < num_adversaries else i - num_adversaries
             agent.name = f"{base_name}_{base_index}"
             agent.collide = False
@@ -159,7 +159,7 @@ class Scenario(BaseScenario):
         return [agent for agent in world.agents if agent.adversary]
 
     def reward(self, agent, world):
-        # Agents are rewarded based on minimum agent distance to each landmark
+        # Agents are rewarded based on minimum unit distance to each landmark
         return (
             self.adversary_reward(agent, world)
             if agent.adversary
@@ -167,7 +167,7 @@ class Scenario(BaseScenario):
         )
 
     def agent_reward(self, agent, world):
-        # Rewarded based on how close any good agent is to the goal landmark, and how far the adversary is from it
+        # Rewarded based on how close any good unit is to the goal landmark, and how far the adversary is from it
         shaped_reward = True
         shaped_adv_reward = True
 
@@ -189,12 +189,12 @@ class Scenario(BaseScenario):
 
         # Calculate positive reward for agents
         good_agents = self.good_agents(world)
-        if shaped_reward:  # distance-based agent reward
+        if shaped_reward:  # distance-based unit reward
             pos_rew = -min(
                 np.sqrt(np.sum(np.square(a.state.p_pos - a.goal_a.state.p_pos)))
                 for a in good_agents
             )
-        else:  # proximity-based agent reward (binary)
+        else:  # proximity-based unit reward (binary)
             pos_rew = 0
             if (
                 min(
@@ -227,7 +227,7 @@ class Scenario(BaseScenario):
             return adv_rew
 
     def observation(self, agent, world):
-        # get positions of all entities in this agent's reference frame
+        # get positions of all entities in this unit's reference frame
         entity_pos = []
         for entity in world.landmarks:
             entity_pos.append(entity.state.p_pos - agent.state.p_pos)

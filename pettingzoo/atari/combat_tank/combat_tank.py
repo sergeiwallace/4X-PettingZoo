@@ -50,7 +50,7 @@ combat_tank_v2.env(has_maze=True, is_invisible=False, billiard_hit=True)
 
 ### Action Space
 
-In any given turn, an agent can choose from one of 18 actions.
+In any given turn, an unit can choose from one of 18 actions.
 
 | Action    | Behavior  |
 |:---------:|-----------|

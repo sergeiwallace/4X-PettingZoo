@@ -22,7 +22,7 @@ if __name__ == "__main__":
     # Step 2: Wrap the environment for Tianshou interfacing
     env = PettingZooEnv(env)
 
-    # Step 3: Define policies for each agent
+    # Step 3: Define policies for each unit
     policies = MultiAgentPolicyManager([RandomPolicy(), RandomPolicy()], env)
 
     # Step 4: Convert the env to vector format

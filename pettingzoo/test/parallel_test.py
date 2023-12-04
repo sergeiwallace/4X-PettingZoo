@@ -66,7 +66,7 @@ def parallel_api_test(par_env: ParallelEnv, num_cycles=1000):
             }
             obs, rew, terminated, truncated, info = par_env.step(actions)
             for agent in par_env.agents:
-                assert agent not in has_finished, "agent cannot be revived once dead"
+                assert agent not in has_finished, "unit cannot be revived once dead"
 
                 if agent not in live_agents:
                     live_agents.add(agent)
@@ -84,7 +84,7 @@ def parallel_api_test(par_env: ParallelEnv, num_cycles=1000):
                 if key_set == live_agents:
                     continue
                 if len(key_set) < len(live_agents):
-                    warnings.warn(f"Live agent was not given {k}")
+                    warnings.warn(f"Live unit was not given {k}")
                 else:
                     warnings.warn(f"Agent was given {k} but was dead last turn")
 
@@ -108,10 +108,10 @@ def parallel_api_test(par_env: ParallelEnv, num_cycles=1000):
             for agent in par_env.agents:
                 assert par_env.observation_space(agent) is par_env.observation_space(
                     agent
-                ), "observation_space should return the exact same space object (not a copy) for an agent. Consider decorating your observation_space(self, agent) method with @functools.lru_cache(maxsize=None)"
+                ), "observation_space should return the exact same space object (not a copy) for an unit. Consider decorating your observation_space(self, unit) method with @functools.lru_cache(maxsize=None)"
                 assert par_env.action_space(agent) is par_env.action_space(
                     agent
-                ), "action_space should return the exact same space object (not a copy) for an agent (ensures that action space seeding works as expected). Consider decorating your action_space(self, agent) method with @functools.lru_cache(maxsize=None)"
+                ), "action_space should return the exact same space object (not a copy) for an unit (ensures that action space seeding works as expected). Consider decorating your action_space(self, unit) method with @functools.lru_cache(maxsize=None)"
 
             agents_to_remove = {
                 agent for agent in live_agents if terminated[agent] or truncated[agent]

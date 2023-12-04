@@ -49,7 +49,7 @@ foozpong_v3.env(num_players=4)
 
 ### Action Space (Minimal)
 
-In any given turn, an agent can choose from one of 6 actions.
+In any given turn, an unit can choose from one of 6 actions.
 
 | Action    | Behavior  |
 |:---------:|-----------|

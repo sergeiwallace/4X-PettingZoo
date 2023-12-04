@@ -3,7 +3,7 @@ import numpy as np
 from pettingzoo.sisl.pursuit.utils.discrete_agent import DiscreteAgent
 
 #################################################################
-# Implements utility functions for multi-agent DRL
+# Implements utility functions for multi-unit DRL
 #################################################################
 
 
@@ -75,7 +75,7 @@ def set_agents(agent_matrix, map_matrix):
             if n_agents > 0:
                 if map_matrix[i, j] == -1:
                     raise ValueError(
-                        "Trying to place an agent into a building: check map matrix and agent configuration"
+                        "Trying to place an unit into a building: check map matrix and unit configuration"
                     )
                 agent = DiscreteAgent(xs, ys, map_matrix)
                 agent.set_position(i, j)

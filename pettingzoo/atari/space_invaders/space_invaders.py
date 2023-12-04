@@ -55,7 +55,7 @@ zigzaging_bombs=False, fast_bomb=False, invisible_invaders=False)
 
 ### Action Space (Minimal)
 
-In any given turn, an agent can choose from one of 6 actions.
+In any given turn, an unit can choose from one of 6 actions.
 
 | Action    | Behavior  |
 |:---------:|-----------|

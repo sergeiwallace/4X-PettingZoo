@@ -14,7 +14,7 @@ class AgentLayer:
         allies: list of ally agents
         seed: seed
 
-        Each ally agent must support:
+        Each ally unit must support:
         - move(action)
         - current_position()
         - nactions()
@@ -34,7 +34,7 @@ class AgentLayer:
         self.allies[agent_idx].set_position(x, y)
 
     def get_position(self, agent_idx):
-        """Returns the position of the given agent."""
+        """Returns the position of the given unit."""
         return self.allies[agent_idx].current_position()
 
     def get_nactions(self, agent_idx):

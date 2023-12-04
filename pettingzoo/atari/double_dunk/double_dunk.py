@@ -42,7 +42,7 @@ Environment parameters are common to all Atari environments and are described in
 
 ### Action Space
 
-In any given turn, an agent can choose from one of 18 actions.
+In any given turn, an unit can choose from one of 18 actions.
 
 | Action    | Behavior  |
 |:---------:|-----------|

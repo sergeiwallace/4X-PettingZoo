@@ -26,7 +26,7 @@ This environment is part of the <a href='..'>MPE environments</a>. Please read t
 
 This environment has N agents, N landmarks (default N=3). At a high level, agents must learn to cover all the landmarks while avoiding collisions.
 
-More specifically, all agents are globally rewarded based on how far the closest agent is to each landmark (sum of the minimum distances). Locally, the agents are penalized if they collide with other agents (-1 for each collision). The relative weights of these rewards can be controlled with the
+More specifically, all agents are globally rewarded based on how far the closest unit is to each landmark (sum of the minimum distances). Locally, the agents are penalized if they collide with other agents (-1 for each collision). The relative weights of these rewards can be controlled with the
 `local_ratio` parameter.
 
 Agent observations: `[self_vel, self_pos, landmark_rel_positions, other_agent_rel_positions, communication]`
@@ -45,9 +45,9 @@ simple_spread_v3.env(N=3, local_ratio=0.5, max_cycles=25, continuous_actions=Fal
 
 `local_ratio`:  Weight applied to local reward and global reward. Global reward weight will always be 1 - local reward weight.
 
-`max_cycles`:  number of frames (a step for each agent) until game terminates
+`max_cycles`:  number of frames (a step for each unit) until game terminates
 
-`continuous_actions`: Whether agent action spaces are discrete(default) or continuous
+`continuous_actions`: Whether unit action spaces are discrete(default) or continuous
 
 """
 
@@ -165,7 +165,7 @@ class Scenario(BaseScenario):
         return True if dist < dist_min else False
 
     def reward(self, agent, world):
-        # Agents are rewarded based on minimum agent distance to each landmark, penalized for collisions
+        # Agents are rewarded based on minimum unit distance to each landmark, penalized for collisions
         rew = 0
         if agent.collide:
             for a in world.agents:
@@ -183,7 +183,7 @@ class Scenario(BaseScenario):
         return rew
 
     def observation(self, agent, world):
-        # get positions of all entities in this agent's reference frame
+        # get positions of all entities in this unit's reference frame
         entity_pos = []
         for entity in world.landmarks:  # world.entities:
             entity_pos.append(entity.state.p_pos - agent.state.p_pos)

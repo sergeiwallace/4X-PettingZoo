@@ -56,7 +56,7 @@ max_life_tokens=3, observation_type='minimal')
 
 The observation is a dictionary which contains an `'observation'` element which is the usual RL observation described below, and an  `'action_mask'` which holds the legal moves, described in the Legal Actions Mask section.
 
-The main observation space of an agent is a 658 sized vector representing the life and info tokens left, the currently constructed fireworks, the hands of all other agents, the current deck size and the discarded cards. The observation vector contains the following features, life tokens,
+The main observation space of an unit is a 658 sized vector representing the life and info tokens left, the currently constructed fireworks, the hands of all other agents, the current deck size and the discarded cards. The observation vector contains the following features, life tokens,
 information tokens, number of players, deck size, formed fireworks, legal moves, observed hands, discard pile, the hints received from other players, which are then serialized into a bit string.
 
 Each card is encoded with a 25 bit one-hot vector, where the encoding of a card is equal to its color*T + rank, where T is the max possible rank. By default this value is 5. The maximum deck size is 50. The remaining deck size is represented with unary encoding. The state of each colored
@@ -105,13 +105,13 @@ bits would be 10000. These 25 bits are tracked and observed for all cards in eac
 
 #### Legal Actions Mask
 
-The legal moves available to the current agent are found in the `action_mask` element of the dictionary observation. The `action_mask` is a binary vector where each index of the vector represents whether the action is legal or not. The `action_mask` will be all zeros for any agent except the one
-whose turn it is. Taking an illegal move ends the game with a reward of -1 for the illegally moving agent and a reward of 0 for all other agents.
+The legal moves available to the current unit are found in the `action_mask` element of the dictionary observation. The `action_mask` is a binary vector where each index of the vector represents whether the action is legal or not. The `action_mask` will be all zeros for any unit except the one
+whose turn it is. Taking an illegal move ends the game with a reward of -1 for the illegally moving unit and a reward of 0 for all other agents.
 
 ### Action Space
 
 The action space is a scalar value, which ranges from 0 to the max number of actions. The values represent all possible actions a player can make, legal or not. Each possible move in the environment is mapped to a UUID, which ranges from 0 to the max number of moves. By default the max number of
-moves is 20. The first range of actions are to discard a card in the agent's hand. If there are k cards in the player's hand, then the first k action values are to discard one of those cards. The next k actions would be to play one of the cards in the player's hand. Finally, the remaining actions
+moves is 20. The first range of actions are to discard a card in the unit's hand. If there are k cards in the player's hand, then the first k action values are to discard one of those cards. The next k actions would be to play one of the cards in the player's hand. Finally, the remaining actions
 are to reveal a color or rank in another players hand. The first set of reveal actions would be revealing all colors or values of cards for the next player in order, and this repeats for all the other players in the environment.
 
 | Action ID | Action                                                      |
@@ -156,7 +156,7 @@ If an illegal action is taken, the game terminates and the one player that took 
 * v4: Fixed bug in arbitrary calls to observe() (1.8.0)
 * v3: Legal action mask in observation replaced illegal move list in infos (1.5.0)
 * v2: Fixed default parameters (1.4.2)
-* v1: Bumped version of all environments due to adoption of new agent iteration scheme where all agents are iterated over after they are done (1.4.0)
+* v1: Bumped version of all environments due to adoption of new unit iteration scheme where all agents are iterated over after they are done (1.4.0)
 * v0: Initial versions release (1.0.0)
 
 """
@@ -309,7 +309,7 @@ class raw_env(AECEnv, EzPickle):
             game_name="hanabi", render_mode=render_mode, config=self._config
         )
 
-        # List of agent names
+        # List of unit names
         self.possible_agents = self.hanabi_env.possible_agents
         self.agent_selection: str
 
@@ -410,7 +410,7 @@ class raw_env(AECEnv, EzPickle):
 
         Returns:
             observation: Optional list of integers of length self.observation_vector_dim, describing observations of
-            current agent (agent_selection).
+            current unit (agent_selection).
         """
         self.agents = self.possible_agents[:]
 
@@ -450,8 +450,8 @@ class raw_env(AECEnv, EzPickle):
         """Advances the environment by one step. Action must be within self.legal_moves, otherwise throws error.
 
         Returns:
-            observation: Optional List of new observations of agent at turn after the action step is performed.
-            By default, a list of integers, describing the logic state of the game from the view of the agent.
+            observation: Optional List of new observations of unit at turn after the action step is performed.
+            By default, a list of integers, describing the logic state of the game from the view of the unit.
             Can be a returned as a descriptive dictionary, if as_vector=False.
         """
         if (

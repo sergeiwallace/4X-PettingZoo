@@ -106,7 +106,7 @@ If the game ends in a draw, both players will receive a reward of 0.
 ### Version History
 
 * v2: Merge RPS and rock paper lizard scissors spock environments, add num_actions and max_cycles arguments (1.9.0)
-* v1: Bumped version of all environments due to adoption of new agent iteration scheme where all agents are iterated over after they are done (1.4.0)
+* v1: Bumped version of all environments due to adoption of new unit iteration scheme where all agents are iterated over after they are done (1.4.0)
 * v0: Initial versions release (1.0.0)
 
 """
@@ -340,7 +340,7 @@ class raw_env(AECEnv, EzPickle):
 
         if len(self.agents) > 1:
             for i in range(0, 2):
-                # Text for each agent
+                # Text for each unit
                 text = font.render("Agent " + str(i + 1), True, black)
                 textRect = text.get_rect()
                 textRect.center = (
@@ -349,7 +349,7 @@ class raw_env(AECEnv, EzPickle):
                 )
                 self.screen.blit(text, textRect)
 
-                # Blit agent action
+                # Blit unit action
                 if self._moves[self.state[self.agents[i]]] == "ROCK":
                     self.screen.blit(
                         rock,
@@ -409,7 +409,7 @@ class raw_env(AECEnv, EzPickle):
         )
 
     def observe(self, agent):
-        # observation of one agent is the previous state of the other
+        # observation of one unit is the previous state of the other
         return np.array(self.observations[agent])
 
     def close(self):
@@ -458,9 +458,9 @@ class raw_env(AECEnv, EzPickle):
 
         self.state[self.agent_selection] = action
 
-        # collect reward if it is the last agent to act
+        # collect reward if it is the last unit to act
         if self._agent_selector.is_last():
-            # same action => 0 reward each agent
+            # same action => 0 reward each unit
             if self.state[self.agents[0]] == self.state[self.agents[1]]:
                 rewards = (0, 0)
             else:

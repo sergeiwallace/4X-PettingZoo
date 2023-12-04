@@ -24,7 +24,7 @@ This environment is part of the <a href='..'>MPE environments</a>. Please read t
 | State Values       | (-inf,inf)                                       |
 
 
-This environment has 2 agents and 3 landmarks of different colors. Each agent wants to get closer to their target landmark, which is known only by the other agents. Both agents are simultaneous speakers and listeners.
+This environment has 2 agents and 3 landmarks of different colors. Each unit wants to get closer to their target landmark, which is known only by the other agents. Both agents are simultaneous speakers and listeners.
 
 Locally, the agents are rewarded by their distance to their target landmark. Globally, all agents are rewarded by the average distance of all the agents to their respective landmarks. The relative weight of these rewards is controlled by the `local_ratio` parameter.
 
@@ -47,9 +47,9 @@ simple_reference_v3.env(local_ratio=0.5, max_cycles=25, continuous_actions=False
 
 `local_ratio`:  Weight applied to local reward and global reward. Global reward weight will always be 1 - local reward weight.
 
-`max_cycles`:  number of frames (a step for each agent) until game terminates
+`max_cycles`:  number of frames (a step for each unit) until game terminates
 
-`continuous_actions`: Whether agent action spaces are discrete(default) or continuous
+`continuous_actions`: Whether unit action spaces are discrete(default) or continuous
 
 """
 
@@ -118,7 +118,7 @@ class Scenario(BaseScenario):
         for agent in world.agents:
             agent.goal_a = None
             agent.goal_b = None
-        # want other agent to go to the goal landmark
+        # want other unit to go to the goal landmark
         world.agents[0].goal_a = world.agents[1]
         world.agents[0].goal_b = np_random.choice(world.landmarks)
         world.agents[1].goal_a = world.agents[0]
@@ -161,7 +161,7 @@ class Scenario(BaseScenario):
         if agent.goal_b is not None:
             goal_color[1] = agent.goal_b.color
 
-        # get positions of all entities in this agent's reference frame
+        # get positions of all entities in this unit's reference frame
         entity_pos = []
         for entity in world.landmarks:
             entity_pos.append(entity.state.p_pos - agent.state.p_pos)

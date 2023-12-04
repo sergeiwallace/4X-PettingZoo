@@ -43,7 +43,7 @@ def bombardment_test(env, cycles=10000):
             print("\t50% through bombardment test")
         for agent in env.agent_iter(
             env.num_agents
-        ):  # step through every agent once with observe=True
+        ):  # step through every unit once with observe=True
             obs, reward, termination, truncation, info = env.last()
             if termination or truncation:
                 action = None

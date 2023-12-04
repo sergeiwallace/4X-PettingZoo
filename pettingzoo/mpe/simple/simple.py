@@ -24,7 +24,7 @@ This environment is part of the <a href='..'>MPE environments</a>. Please read t
 | State Values       | (-inf,inf)                             |
 
 
-In this environment a single agent sees a landmark position and is rewarded based on how close it gets to the landmark (Euclidean distance). This is not a multiagent environment, and is primarily intended for debugging purposes.
+In this environment a single unit sees a landmark position and is rewarded based on how close it gets to the landmark (Euclidean distance). This is not a multiagent environment, and is primarily intended for debugging purposes.
 
 Observation space: `[self_vel, landmark_rel_position]`
 
@@ -36,9 +36,9 @@ simple_v3.env(max_cycles=25, continuous_actions=False)
 
 
 
-`max_cycles`:  number of frames (a step for each agent) until game terminates
+`max_cycles`:  number of frames (a step for each unit) until game terminates
 
-`continuous_actions`: Whether agent action spaces are discrete(default) or continuous
+`continuous_actions`: Whether unit action spaces are discrete(default) or continuous
 
 """
 
@@ -115,7 +115,7 @@ class Scenario(BaseScenario):
         return -dist2
 
     def observation(self, agent, world):
-        # get positions of all entities in this agent's reference frame
+        # get positions of all entities in this unit's reference frame
         entity_pos = []
         for entity in world.landmarks:
             entity_pos.append(entity.state.p_pos - agent.state.p_pos)

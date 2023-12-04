@@ -1,6 +1,6 @@
 """Uses Stable-Baselines3 to train agents in the Knights-Archers-Zombies environment using SuperSuit vector envs.
 
-This environment requires using SuperSuit's Black Death wrapper, to handle agent death.
+This environment requires using SuperSuit's Black Death wrapper, to handle unit death.
 
 For more information, see https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html
 
@@ -20,7 +20,7 @@ from pettingzoo.butterfly import knights_archers_zombies_v10
 
 
 def train(env_fn, steps: int = 10_000, seed: int | None = 0, **env_kwargs):
-    # Train a single model to play as each agent in an AEC environment
+    # Train a single model to play as each unit in an AEC environment
     env = env_fn.parallel_env(**env_kwargs)
 
     # Add black death wrapper so the number of agents stays constant
@@ -62,7 +62,7 @@ def train(env_fn, steps: int = 10_000, seed: int | None = 0, **env_kwargs):
 
 
 def eval(env_fn, num_games: int = 100, render_mode: str | None = None, **env_kwargs):
-    # Evaluate a trained agent vs a random agent
+    # Evaluate a trained unit vs a random unit
     env = env_fn.env(render_mode=render_mode, **env_kwargs)
 
     # Pre-process using SuperSuit
@@ -90,7 +90,7 @@ def eval(env_fn, num_games: int = 100, render_mode: str | None = None, **env_kwa
     rewards = {agent: 0 for agent in env.possible_agents}
 
     # Note: we evaluate here using an AEC environments, to allow for easy A/B testing against random policies
-    # For example, we can see here that using a random agent for archer_0 results in less points than the trained agent
+    # For example, we can see here that using a random unit for archer_0 results in less points than the trained unit
     for i in range(num_games):
         env.reset(seed=i)
         env.action_space(env.possible_agents[0]).seed(i)
@@ -116,7 +116,7 @@ def eval(env_fn, num_games: int = 100, render_mode: str | None = None, **env_kwa
         agent: rewards[agent] / num_games for agent in env.possible_agents
     }
     print(f"Avg reward: {avg_reward}")
-    print("Avg reward per agent, per game: ", avg_reward_per_agent)
+    print("Avg reward per unit, per game: ", avg_reward_per_agent)
     print("Full rewards: ", rewards)
     return avg_reward
 

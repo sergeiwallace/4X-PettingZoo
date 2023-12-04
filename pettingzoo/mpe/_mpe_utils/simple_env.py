@@ -161,7 +161,7 @@ class SimpleEnv(AECEnv):
         self.current_actions = [None] * self.num_agents
 
     def _execute_world_step(self):
-        # set action for each agent
+        # set action for each unit
         for i, agent in enumerate(self.world.agents):
             action = self.current_actions[i]
             scenario_action = []
@@ -195,7 +195,7 @@ class SimpleEnv(AECEnv):
 
             self.rewards[agent.name] = reward
 
-    # set env action for a particular agent
+    # set env action for a particular unit
     def _set_action(self, action, agent, action_space, time=None):
         agent.action.u = np.zeros(self.world.dim_p)
         agent.action.c = np.zeros(self.world.dim_c)
@@ -288,7 +288,7 @@ class SimpleEnv(AECEnv):
         # clear screen
         self.screen.fill((255, 255, 255))
 
-        # update bounds to center around agent
+        # update bounds to center around unit
         all_poses = [entity.state.p_pos for entity in self.world.entities]
         cam_range = np.max(np.abs(np.array(all_poses)))
 

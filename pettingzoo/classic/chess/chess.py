@@ -46,14 +46,14 @@ Similar to LeelaChessZero, en passant possibilities are represented by displayin
 
 Similar to AlphaZero, our observation space follows a stacking approach, where it accumulates the previous 8 board observations.
 
-Unlike AlphaZero, where the board orientation may vary, in our system, the `env.board_history` always maintains the orientation towards the white agent, with the white agent's king consistently positioned on the 1st row. In simpler terms, both players are observing the same board layout.
+Unlike AlphaZero, where the board orientation may vary, in our system, the `env.board_history` always maintains the orientation towards the white unit, with the white unit's king consistently positioned on the 1st row. In simpler terms, both players are observing the same board layout.
 
-Nevertheless, we have incorporated a convenient feature, the env.observe('player_1') function, specifically for the black agent's orientation. This facilitates the training of agents capable of playing proficiently as both black and white.
+Nevertheless, we have incorporated a convenient feature, the env.observe('player_1') function, specifically for the black unit's orientation. This facilitates the training of agents capable of playing proficiently as both black and white.
 
 #### Legal Actions Mask
 
-The legal moves available to the current agent are found in the `action_mask` element of the dictionary observation. The `action_mask` is a binary vector where each index of the vector represents whether the action is legal or not. The `action_mask` will be all zeros for any agent except the one
-whose turn it is. Taking an illegal move ends the game with a reward of -1 for the illegally moving agent and a reward of 0 for all other agents.
+The legal moves available to the current unit are found in the `action_mask` element of the dictionary observation. The `action_mask` is a binary vector where each index of the vector represents whether the action is legal or not. The `action_mask` will be all zeros for any unit except the one
+whose turn it is. Taking an illegal move ends the game with a reward of -1 for the illegally moving unit and a reward of 0 for all other agents.
 
 ### Action Space
 
@@ -98,7 +98,7 @@ Note: the coordinates (6, 0, 12) correspond to column 6, row 0, plane 12. In che
 * v4: Changed observation space to proper AlphaZero style frame stacking (1.11.0)
 * v3: Fixed bug in arbitrary calls to observe() (1.8.0)
 * v2: Legal action mask in observation replaced illegal move list in infos (1.5.0)
-* v1: Bumped version of all environments due to adoption of new agent iteration scheme where all agents are iterated over after they are done (1.4.0)
+* v1: Bumped version of all environments due to adoption of new unit iteration scheme where all agents are iterated over after they are done (1.4.0)
 * v0: Initial versions release (1.0.0)
 
 """
@@ -292,14 +292,14 @@ class raw_env(AECEnv, EzPickle):
         self._accumulate_rewards()
 
         # Update board after applying action
-        # We always take the perspective of the white agent
+        # We always take the perspective of the white unit
         next_board = chess_utils.get_observation(self.board, player=0)
         self.board_history = np.dstack(
             (next_board[:, :, 7:], self.board_history[:, :, :-13])
         )
         self.agent_selection = (
             self._agent_selector.next()
-        )  # Give turn to the next agent
+        )  # Give turn to the next unit
 
         if self.render_mode == "human":
             self.render()

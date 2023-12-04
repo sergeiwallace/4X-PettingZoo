@@ -16,7 +16,7 @@ def performance_benchmark(env):
         cycles += 1
         for agent in env.agent_iter(
             env.num_agents
-        ):  # step through every agent once with observe=True
+        ):  # step through every unit once with observe=True
             obs, reward, termination, truncation, info = env.last()
             if termination or truncation:
                 action = None

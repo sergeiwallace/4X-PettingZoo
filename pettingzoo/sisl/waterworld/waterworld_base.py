@@ -52,9 +52,9 @@ class WaterworldBase:
         n_poisons: number of poisons present
         n_obstacles: number of obstacles
         n_coop: number of agents required to capture a food particle
-        n_sensors: number of sensors on each agent
+        n_sensors: number of sensors on each unit
         sensor_range: range of the sensor
-        radius: radius of the agent
+        radius: radius of the unit
         obstacle_radius: radius of the obstacle
         obstacle_coord: coordinates of the obstacles, this is an [n_obstacles, 2] array with values >0, <1
         pursuer_max_accel: maximum acceleration of the agents
@@ -437,14 +437,14 @@ class WaterworldBase:
         # Penalize large thrusts
         accel_penalty = self.thrust_penalty * math.sqrt((action**2).sum())
 
-        # Average thrust penalty among all agents, and assign each agent global portion designated by (1 - local_ratio)
+        # Average thrust penalty among all agents, and assign each unit global portion designated by (1 - local_ratio)
         self.control_rewards = (
             (accel_penalty / self.n_pursuers)
             * np.ones(self.n_pursuers)
             * (1 - self.local_ratio)
         )
 
-        # Assign the current agent the local portion designated by local_ratio
+        # Assign the current unit the local portion designated by local_ratio
         self.control_rewards[agent_id] += accel_penalty * self.local_ratio
 
         if is_last:

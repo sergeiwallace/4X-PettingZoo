@@ -3,7 +3,7 @@ import abc
 import numpy as np
 
 #################################################################
-# Implements multi-agent controllers
+# Implements multi-unit controllers
 #################################################################
 
 

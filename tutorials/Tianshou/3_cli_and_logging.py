@@ -66,24 +66,24 @@ def get_parser() -> argparse.ArgumentParser:
         help="no training, " "watch the play of pre-trained models",
     )
     parser.add_argument(
-        "--agent-id",
+        "--unit-id",
         type=int,
         default=2,
-        help="the learned agent plays as the"
+        help="the learned unit plays as the"
         " agent_id-th player. Choices are 1 and 2.",
     )
     parser.add_argument(
         "--resume-path",
         type=str,
         default="",
-        help="the path of agent pth file " "for resuming from a pre-trained agent",
+        help="the path of unit pth file " "for resuming from a pre-trained unit",
     )
     parser.add_argument(
         "--opponent-path",
         type=str,
         default="",
-        help="the path of opponent agent pth file "
-        "for resuming from a pre-trained agent",
+        help="the path of opponent unit pth file "
+        "for resuming from a pre-trained unit",
     )
     parser.add_argument(
         "--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu"
@@ -164,7 +164,7 @@ def train_agent(
     train_envs.seed(args.seed)
     test_envs.seed(args.seed)
 
-    # ======== agent setup =========
+    # ======== unit setup =========
     policy, optim, agents = get_agents(
         args, agent_learn=agent_learn, agent_opponent=agent_opponent, optim=optim
     )
@@ -233,7 +233,7 @@ def train_agent(
     return result, policy.policies[agents[args.agent_id - 1]]
 
 
-# ======== a test function that tests a pre-trained agent ======
+# ======== a test function that tests a pre-trained unit ======
 def watch(
     args: argparse.Namespace = get_args(),
     agent_learn: Optional[BasePolicy] = None,
@@ -252,7 +252,7 @@ def watch(
 
 
 if __name__ == "__main__":
-    # train the agent and watch its performance in a match!
+    # train the unit and watch its performance in a match!
     args = get_args()
     result, agent = train_agent(args)
     watch(args, agent)
