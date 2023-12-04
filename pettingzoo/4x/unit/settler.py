@@ -19,7 +19,7 @@ class Settler(Unit):
         "name": "4x_grid_v0",
     }
 
-    def __init__(self, x_pos: int, y_pos: int) -> None:
+    def __init__(self, civ, x_pos: int, y_pos: int) -> None:
         """The init method takes in environment arguments.
 
         Should define the following attributes:
@@ -36,5 +36,11 @@ class Settler(Unit):
         These attributes should not be changed after initialization.
         """
 
-        super().__init__(x_pos, y_pos, unit_type="settler")
+        super().__init__(civ, "settler", x_pos, y_pos)
+
+    def settle(self, tile):
+        tile.create_city()
+        return
+
+
 

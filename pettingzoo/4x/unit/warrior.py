@@ -19,7 +19,7 @@ class Warrior(Unit):
         "name": "4x_grid_v0",
     }
 
-    def __init__(self, x_pos, y_pos):
+    def __init__(self, civ, x_pos, y_pos):
         """The init method takes in environment arguments.
 
         Should define the following attributes:
@@ -36,4 +36,12 @@ class Warrior(Unit):
         These attributes should not be changed after initialization.
         """
 
-        super().__init__(x_pos, y_pos, unit_type="warrior")
+        super().__init__(civ, "warrior", x_pos, y_pos)
+
+    def attack(self, unit):
+        return
+
+    def defend(self):
+        return
+
+

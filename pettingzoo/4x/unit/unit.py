@@ -7,6 +7,7 @@ from gymnasium.spaces import Discrete, MultiDiscrete
 
 from pettingzoo import ParallelEnv
 
+# TODO: Add other standard unit actions: https://civilization.fandom.com/wiki/List_of_unit_actions_in_Civ6
 
 class Unit:
     """The metadata holds environment constants.
@@ -20,7 +21,7 @@ class Unit:
     # TODO: Replace unique unit id logic
     id_counter = 1
 
-    def __init__(self, x_pos: int, y_pos: int, unit_type: str):
+    def __init__(self, civ, unit_type: str, x_pos: int, y_pos: int):
         """The init method takes in environment arguments.
 
         Should define the following attributes:
@@ -42,3 +43,12 @@ class Unit:
         self.x_pos = x_pos
         self.y_pos = y_pos
         self.type = unit_type
+        self.civ = civ
+        self.maintain_cost = 0
+        # TODO: add dictionary with resources and required inputs
+        self.create_cost = None
+
+    def move_to(self, x_pos_new, y_pos_new):
+        self.x_pos = x_pos_new
+        self.y_pos = y_pos_new
+        return
